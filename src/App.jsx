@@ -8,7 +8,7 @@ import logoImg from './assets/oneaura.webp'
 import chatImg from './assets/chat.webp'
 
 const go = id => () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-const Reservar = ({ children, variant = 'primary', size = 'md', className = '' }) => (
+const Reservar = ({ children, variant = 'primary', size = 'sm', className = '' }) => (
   <Button variant={variant} size={size} className={className} onPress={go('reserva')}>{children}</Button>
 )
 const S = ({ id, className = '', wide, children }) => (
@@ -22,7 +22,7 @@ const Nav = () => (
     <div className="mx-auto flex h-14 max-w-6xl items-center justify-between">
       <a href="#" aria-label="OneAura"><img src={logoImg} alt="OneAura" className="h-7 w-auto" /></a>
       <nav className="hidden gap-6 text-xs md:flex"><a href="#como">Cómo funciona</a><a href="#calculadora">Calculadora</a><a href="#faq">Preguntas</a></nav>
-      <div className="flex items-center gap-4"><a href={SCHOOLS_URL} className="text-xs text-neutral transition hover:text-primary">Acceso escuelas</a><Reservar size="sm">Reservar demo</Reservar></div>
+      <div className="flex items-center gap-4"><a href={SCHOOLS_URL} className="text-xs text-neutral transition hover:text-primary">Acceso escuelas</a><Reservar>Reservar demo</Reservar></div>
     </div>
   </header>
 )
@@ -36,7 +36,7 @@ const Hero = () => (
         <p className="mt-4 max-w-lg text-sm">Tu propia web app de prácticas, con tu marca y tu propio sistema de suscripciones para que tus alumnos sigan practicando después del curso, y tu escuela facture todos los meses.</p>
         <div className="mt-8 flex flex-wrap items-center gap-2">
           <Reservar>Reserva tu demo gratuita de 30 minutos</Reservar>
-          <Button variant="ghost" onPress={go('calculadora')}>Calcula cuánto puede ganar tu escuela ↓</Button>
+          <Button variant="ghost" size="sm" onPress={go('calculadora')}>Calcula cuánto puede ganar tu escuela ↓</Button>
         </div>
         <p className="mt-4 text-xs text-muted">Sin coste de alta · Sin permanencia</p>
       </div>
