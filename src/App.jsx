@@ -216,6 +216,18 @@ const Faq = () => (
 const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
 const Reserva = () => {
   const ref = useRef(null)
+  const [height, setHeight] = useState(700)
+  useEffect(() => {
+    // Calendly posts its content height on every step of the flow; follow it
+    // instead of a fixed height that's too tall on one step and too short on another.
+    const onMessage = e => {
+      if (e.origin !== 'https://calendly.com' || e.data?.event !== 'calendly.page_height') return
+      const h = parseInt(e.data.payload?.height, 10)
+      if (h > 0) setHeight(h)
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [])
   useEffect(() => {
     if (!BOOKING_URL || !ref.current) return
     const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355`
@@ -250,7 +262,7 @@ const Reserva = () => {
       <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white text-foreground">
         {BOOKING_URL
-          ? <div ref={ref} style={{ minWidth: 320, height: 840 }} />
+          ? <div ref={ref} style={{ minWidth: 320, height }} />
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
       {BOOKING_URL && <p className="mt-5 text-sm opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
