@@ -167,7 +167,8 @@ const Reserva = () => (
     <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
     <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
     <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white text-foreground">
-      {BOOKING_URL ? <iframe title="Reservar demo" src={`${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}embed_domain=1&embed_type=Inline&hide_gdpr_banner=1&primary_color=825355`} className="h-[700px] w-full border-0" />
+      {BOOKING_URL
+        ? <div className="calendly-inline-widget" data-url={`${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&text_color=ffffff&primary_color=825355`} style={{ minWidth: 320, height: 700 }} />
         : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
     </div>
     {BOOKING_URL && <p className="mt-5 text-xs opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
