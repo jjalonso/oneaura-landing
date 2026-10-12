@@ -1,6 +1,8 @@
 // Textos y ajustes editables en un solo sitio.
 export const SCHOOLS_URL = '#' // enlace de acceso de las escuelas (login); sustitúyelo por la URL real
 export const BOOKING_URL = 'https://calendly.com/hello-oneaura/30min' // enlace de Calendly (o Cal.com) para el calendario de reservas
+export const TERMS_URL = '#' // enlace a los términos y condiciones; sustitúyelo por la URL real
+export const WHATSAPP_URL = 'https://wa.me/447474464848?text=%5BOneAura.app%5D%20Hola' // botón flotante de WhatsApp
 import ines from './assets/logos/ines.webp'
 import biel from './assets/logos/biel.webp'
 import rita from './assets/logos/rita.webp'
