@@ -3,8 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>OneAura · Tu formación termina. Tus ingresos, no.</title>
-<meta name="description" content="App y suscripciones con la marca de tu escuela de mediumnidad para que tus alumnos sigan practicando." />
+<title>OneAura · Tu formación termina. Tus ingresos no deberían.</title>
+<meta name="description" content="Web app y suscripciones con la marca de tu escuela de mediumnidad y canalización para que tus alumnos sigan practicando." />
+<script>
+(function () {
+  var r = document.documentElement;
+  function light() {
+    if (r.classList.contains('dark')) r.classList.remove('dark');
+    if (r.getAttribute('data-theme') === 'dark') r.setAttribute('data-theme', 'light');
+  }
+  light();
+  new MutationObserver(light).observe(r, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+})();
+</script>
 </head>
 <body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body>
 </html>

@@ -1,197 +1,188 @@
-import { Accordion, Button, Card, Chip, Surface } from '@heroui/react'
+import { useEffect, useState } from 'react'
+import { Accordion, Button, Card, Chip } from '@heroui/react'
 import Calculator from './Calculator'
-import { BOOKING_URL, SLOTS_LEFT, LOGOS, faq } from './content'
-import logoOneAura from './assets/logo-oneaura.webp'
-import heroApp from './assets/hero-app.webp'
-import chatWhatsapp from './assets/seccion1-chat-whatsapp.webp'
+import { BOOKING_URL, SCHOOLS_URL, COMMISSION, PAYMENT_FEE, LOGOS, faq } from './content'
+const fmt = n => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+import heroImg from './assets/hero.webp'
+import logoImg from './assets/oneaura.webp'
+import chatImg from './assets/chat.webp'
 
 const go = id => () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-const BookingButton = ({ children, variant = 'primary', size = 'lg', className = '' }) => (
+const Reservar = ({ children, variant = 'primary', size = 'md', className = '' }) => (
   <Button variant={variant} size={size} className={className} onPress={go('reserva')}>{children}</Button>
 )
-const S = ({ id, className = '', children }) => (
-  <section id={id} className={`px-5 py-20 ${className}`}><div className="mx-auto max-w-5xl">{children}</div></section>
+const S = ({ id, className = '', wide, children }) => (
+  <section id={id} className={`px-5 py-20 md:py-28 ${className}`}><div className={`mx-auto ${wide ? 'max-w-6xl' : 'max-w-4xl'}`}>{children}</div></section>
 )
-const H2 = ({ children, className = '' }) => <h2 className={`mb-6 text-3xl font-extrabold leading-tight md:text-4xl ${className}`}>{children}</h2>
+const H2 = ({ children, className = '' }) => <h2 className={`mb-8 text-2xl font-bold leading-snug tracking-tight md:text-3xl ${className}`}>{children}</h2>
+const Tile = ({ children, className = '' }) => <Card className={`h-full !rounded-3xl !p-6 ${className}`}>{children}</Card>
 
 const Nav = () => (
   <header className="glass-card sticky z-50 px-5" style={{ top: 'env(safe-area-inset-top, 0px)' }}>
-    <div className="mx-auto flex h-16 max-w-5xl items-center justify-between">
-      <a href="#"><img src={logoOneAura} alt="OneAura" className="h-7 w-auto" /></a>
-      <nav className="hidden gap-6 text-sm md:flex">
-        <a href="#como">Cómo funciona</a><a href="#calculadora">Calculadora</a><a href="#fundadores">Fundadores</a>
-      </nav>
-      <BookingButton size="sm">Reservar demo</BookingButton>
+    <div className="mx-auto flex h-14 max-w-6xl items-center justify-between">
+      <a href="#" aria-label="OneAura"><img src={logoImg} alt="OneAura" className="h-7 w-auto" /></a>
+      <nav className="hidden gap-6 text-sm md:flex"><a href="#como">Cómo funciona</a><a href="#calculadora">Calculadora</a><a href="#faq">Preguntas</a></nav>
+      <div className="flex items-center gap-4"><a href={SCHOOLS_URL} className="text-xs text-neutral transition hover:text-primary sm:text-sm">Acceso escuelas</a><Reservar size="sm">Reservar demo</Reservar></div>
     </div>
   </header>
 )
 
 const Hero = () => (
-  <S className="bg-gradient-to-b from-soft to-background">
-    <div className="grid items-center gap-12 md:grid-cols-2">
+  <S wide className="bg-gradient-to-b from-soft to-background !pt-14 md:!pt-20">
+    <div className="grid items-center gap-10 md:grid-cols-2">
       <div>
-        <Chip size="sm" className="mb-4 bg-secondary text-secondary-foreground">Para escuelas y formadores de mediumnidad</Chip>
-        <h1 className="text-4xl font-extrabold leading-tight text-primary md:text-6xl">Tu formación termina. Tus ingresos, no.</h1>
-        <p className="mt-5 text-lg">Tu propia app y tu propio sistema de suscripciones para que tus alumnos sigan practicando después del curso, y tu escuela facture todos los meses.</p>
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <BookingButton>Reserva tu demo gratuita de 20 minutos</BookingButton>
-          <Button variant="ghost" size="lg" onPress={go('calculadora')}>Calcula cuánto puede ganar tu escuela ↓</Button>
+        <Chip size="md" className="mb-5 !h-auto !px-4 !py-1.5 !text-xs bg-secondary text-secondary-foreground sm:!text-sm md:!text-base">Para escuelas y formadores de mediumnidad y canalización</Chip>
+        <h1 className="text-3xl font-bold leading-tight tracking-tight text-primary md:text-[2.5rem]">Tu formación termina.<br />Tus ingresos no deberían.</h1>
+        <p className="mt-4 max-w-lg text-base">Tu propia web app de prácticas, con tu marca y tu propio sistema de suscripciones para que tus alumnos sigan practicando después del curso, y tu escuela facture todos los meses.</p>
+        <div className="mt-8 flex flex-wrap items-center gap-2">
+          <Reservar>Reserva tu demo gratuita de 30 minutos</Reservar>
+          <Button variant="ghost" onPress={go('calculadora')}>Calcula cuánto puede ganar tu escuela ↓</Button>
         </div>
-        <p className="mt-5 text-sm text-muted">Sin coste de alta · Sin permanencia · Plazas limitadas para escuelas fundadoras</p>
+        <p className="mt-4 text-xs text-muted">Sin coste de alta · Sin permanencia</p>
       </div>
-      <img src={heroApp} alt="La app de OneAura, con el nombre de tu escuela" className="mx-auto w-full max-w-sm" />
+      <img src={heroImg} alt="Web app de la escuela con la pantalla de inicio y una videollamada de práctica" className="mx-auto w-full max-w-[22rem] md:max-w-[34rem]" />
     </div>
   </S>
 )
 
 const Logos = () => LOGOS.length === 0 ? null : (
-  <S className="!py-10">
-    <p className="mb-5 text-center text-sm font-semibold text-muted">Escuelas fundadoras de OneAura</p>
-    <div className="flex flex-wrap items-center justify-center gap-8">{LOGOS.map(l => <img key={l.name} src={l.src} alt={l.name} className="h-10 grayscale transition hover:grayscale-0" />)}</div>
-  </S>
-)
-
-const Problema = () => (
-  <S>
-    <div className="grid items-center gap-10 md:grid-cols-2">
-      <div>
-        <H2>El último día de curso empiezas a perder a tus alumnos.</H2>
-        <p className="text-lg">Les das unas cuantas prácticas y les animas a seguir quedando. La intención es buena, pero en unas semanas el grupo de WhatsApp se apaga y cada uno vuelve a su vida.</p>
-      </div>
-      <img src={chatWhatsapp} alt="Grupo de WhatsApp de prácticas, sin respuesta desde hace semanas" className="mx-auto w-full max-w-xs" />
-    </div>
-    <div className="mt-12 grid gap-5 md:grid-cols-3">
-      {[['Se quedan sin con quién practicar.', 'La familia y los amigos se acaban pronto.'], ['Buscan prácticas fuera de tu escuela.', 'Acaban en grupos de redes sociales, con desconocidos y sin ningún criterio.'], ['El vínculo se rompe.', 'Cuando vuelvan a formarse, puede que no sea contigo.']].map(([t, d]) => (
-        <Card key={t}>
-          <Card.Header>
-            <Card.Title className="text-base text-primary">{t}</Card.Title>
-            <Card.Description className="text-sm">{d}</Card.Description>
-          </Card.Header>
-        </Card>
+  <S className="!pt-14 !pb-24 md:!pb-32">
+    <p className="mb-8 text-center text-base font-semibold text-neutral md:text-lg">Escuelas que ya forman parte de OneAura</p>
+    <div className="flex flex-col items-center gap-y-8">
+      {[LOGOS.slice(0, 3), LOGOS.slice(3)].map((row, i) => (
+        <div key={i} className="flex flex-wrap items-center justify-center gap-x-16 gap-y-8">
+          {row.map(l => <img key={l.name} src={l.src} alt={l.name} className={`${l.cls} w-auto opacity-80 mix-blend-multiply grayscale transition hover:opacity-100 hover:grayscale-0`} />)}
+        </div>
       ))}
     </div>
   </S>
 )
 
-const Coste = () => (
-  <S className="bg-primary text-center text-primary-foreground">
-    <H2>Lo que no aparece en tus cuentas</H2>
-    <p className="mx-auto max-w-2xl text-lg opacity-90">Tú has hecho lo más difícil, que es formarles. Pero entre una formación y la siguiente, esos alumnos no te aportan nada, y algunos no volverán. Cada promoción que termina es una comunidad que se pierde.</p>
-    <p className="mx-auto mt-10 max-w-3xl text-3xl font-extrabold leading-tight text-secondary md:text-5xl">Ingresas cuando hay curso. El resto de meses, cero.</p>
+const Problema = () => (
+  <S className="bg-primary text-primary-foreground">
+    <div className="grid items-center gap-10 md:grid-cols-2">
+      <div>
+        <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-secondary">1.- El Problema</p>
+        <H2>El último día de curso empiezas a perder a tus alumnos.</H2>
+        <p className="opacity-90">Les das unas cuantas prácticas y les animas a seguir practicando en el grupo. Pero en unas semanas el grupo de WhatsApp se apaga y cada uno vuelve a su rutina.</p>
+      </div>
+      <img src={chatImg} alt="Chat de WhatsApp: «Alguien sigue aqui?» hace 1 mes y «Quiere practicar alguien mañana?» hace 2 semanas, sin respuesta" className="mx-auto w-full max-w-md drop-shadow-lg md:ml-auto md:mr-0 md:max-w-[23rem]" />
+    </div>
+    <div className="mt-14 grid items-stretch gap-6 md:grid-cols-3">
+      {[['Los grupos y chats se apagan.', 'En poco tiempo la gente deja de participar y los grupos se olvidan.'], ['Buscar prácticas no es fácil.', 'Lo intentan en Facebook o TikTok sin apenas seguidores, acordar horarios, zonas horarias distintas... es una pesadilla.'], ['El vínculo se rompe.', 'Cuando vuelvan a formarse, es probable que el alumno haya explorado otros mediums o técnicas y no sea contigo.']].map(([t, d]) => (
+        <Tile key={t}><h3 className="mb-1.5 text-sm font-semibold text-primary">{t}</h3><p className="text-sm text-foreground">{d}</p></Tile>
+      ))}
+    </div>
+    <p className="mx-auto mt-14 max-w-2xl text-balance text-center text-xl font-semibold leading-snug text-secondary md:text-2xl">Y cuando el alumno se va, dejas de generar ingresos con&nbsp;él.</p>
   </S>
 )
 
 const Solucion = () => (
-  <S>
-    <H2>OneAura: la práctica continua de tu escuela, en piloto automático</H2>
-    <div className="grid gap-6 md:grid-cols-3">
-      {[['▣', 'Tu propia app', 'Con el nombre y el logo de tu escuela. Tus alumnos practican contigo, no en cualquier otro sitio.'], ['€', 'Tus propias suscripciones', 'Tú decides el precio y cobras cada mes. Sin desarrollar nada ni gestionar pagos.'], ['◷', 'Práctica organizada sola', 'Franjas semanales, círculos de práctica, emparejamiento automático y videollamada integrada.']].map(([i, t, d]) => (
-        <div key={t}><div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-soft text-xl text-primary">{i}</div><h3 className="mb-1 text-lg font-bold text-primary">{t}</h3><p>{d}</p></div>
+  <S className="bg-soft">
+    <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">3.- Qué gana tu escuela</p>
+    <H2>Tu propia web app y tus suscripciones para ingresos recurrentes</H2>
+    <div className="grid items-stretch gap-6 md:grid-cols-2">
+      {[['▣', 'Tu propia web app', <>Con el nombre y el logo de tu escuela y tu propia dirección, por ejemplo <span className="whitespace-nowrap font-semibold text-primary">tuescuela.practicas.app</span>. Tus alumnos entran desde el móvil, sin descargar nada.</>], ['€', 'Tus propias suscripciones', 'Tú decides el precio y cobras cada mes. Sin desarrollar nada ni gestionar pagos.']].map(([i, t, d]) => (
+        <Tile key={t}><div className="mb-3 grid h-9 w-9 place-items-center rounded-full bg-soft text-base text-primary">{i}</div><h3 className="mb-1.5 text-sm font-semibold text-primary">{t}</h3><p className="text-sm">{d}</p></Tile>
       ))}
     </div>
   </S>
 )
 
 const Como = () => (
-  <S id="como" className="bg-soft">
-    <H2 className="text-primary">En marcha en 3 pasos</H2>
-    <ol className="grid gap-5 md:grid-cols-3">
-      {[['Configuramos tu escuela.', 'Tu logo, tu precio y tus franjas de práctica. Lo hacemos contigo en una sesión.'], ['Lo presentas al terminar el curso.', 'Tus alumnos se suscriben como la forma oficial de seguir practicando con tu escuela.'], ['Practican cada semana y tú cobras cada mes.', 'Nosotros nos ocupamos de los horarios, las parejas y la tecnología.']].map(([t, d], i) => (
-        <li key={t}>
-          <Card>
-            <span className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-primary font-bold text-primary-foreground">{i + 1}</span>
-            <Card.Header>
-              <Card.Title className="text-base">{t}</Card.Title>
-              <Card.Description className="text-sm">{d}</Card.Description>
-            </Card.Header>
-          </Card>
-        </li>
+  <S id="como">
+    <div className="mb-12 max-w-2xl">
+      <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">2.- Qué ganan tus alumnos</p>
+      <H2 className="text-primary !mb-4">Ellos registran su disponibilidad y nosotros los emparejamos</H2>
+      <p>Prácticas continuas con otros estudiantes de la red OneAura. Sin esfuerzo, nuestro sistema los mantiene practicando en rutina.</p>
+    </div>
+    <ol className="grid items-stretch gap-6 md:grid-cols-3">
+      {[['Marcan su disponibilidad.', 'Eligen sus franjas horarias disponibles, de lunes a domingo.'], ['Nuestra IA los empareja.', 'Nuestra IA empareja estudiantes y los notifica para una sesión programada con entre 2 y 7 días de antelación.'], ['Videollamadas integradas.', 'Les avisamos cuando llega la hora y se unen a una videollamada de 60 minutos. Al terminar, pueden valorar a su compañero.']].map(([t, d], i) => (
+        <li key={t} className="flex"><Tile className="w-full"><span className="mb-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span><h3 className="mb-1.5 text-sm font-semibold">{t}</h3><p className="text-sm">{d}</p></Tile></li>
       ))}
     </ol>
   </S>
 )
 
-const Alumnos = () => (
-  <S className="text-center"><div className="mx-auto max-w-2xl">
-    <H2 className="text-primary">Tus alumnos te lo agradecerán</H2>
-    <p className="text-lg">Práctica real cada semana, con compañeros de su nivel y dentro de la escuela en la que confían. Sin buscar desconocidos en redes ni organizar nada.</p>
-  </div></S>
-)
-
-const Modelo = () => (
-  <S className="bg-soft text-center"><div className="mx-auto max-w-2xl">
-    <H2 className="text-primary">Solo ganamos si tú ganas</H2>
-    <p className="mb-8 text-lg">Sin cuota mensual ni coste de alta. Compartimos cada suscripción. Si tus alumnos no se suscriben, no pagas nada.</p>
-    <Card className="text-left">
-      <p className="mb-3 font-semibold">Suscripción de 16 €</p>
-      <div className="flex overflow-hidden rounded-full text-sm font-semibold"><div className="w-1/2 bg-primary p-3 text-primary-foreground">8 € para tu escuela</div><div className="w-1/2 bg-secondary p-3 text-secondary-foreground">8 € para OneAura</div></div>
-      <p className="mt-2 text-xs text-muted">OneAura: tecnología, pagos, soporte</p>
-    </Card>
-  </div></S>
-)
-
-const Fundadoras = () => (
-  <S id="fundadores">
-    <Surface variant="secondary" className="grid items-center gap-10 !p-8 md:grid-cols-2 md:!p-12">
-      <div>
-        <H2 className="text-primary">Buscamos 10 escuelas fundadoras</H2>
-        <p className="mb-4">Las primeras escuelas tendrán condiciones que no volveremos a ofrecer:</p>
-        <ul className="mb-6 space-y-2">{['Configuración de tu app sin coste', 'Condiciones especiales durante los primeros meses', 'Acompañamiento personal en el lanzamiento', 'Voz en las próximas funciones de OneAura'].map(x => <li key={x}><span className="mr-2 text-primary">✓</span>{x}</li>)}</ul>
-        <p className="mb-5 font-bold text-primary">Quedan {SLOTS_LEFT} plazas</p>
-        <BookingButton>Solicitar mi plaza de fundadora</BookingButton>
-      </div>
-      <div className="mx-auto grid h-56 w-56 place-items-center rounded-full bg-primary text-center text-primary-foreground shadow-sanctuary">
-        <div><p className="text-3xl text-secondary">✦</p><p className="px-4 font-bold">Escuela Fundadora</p><p className="text-sm text-secondary">OneAura 2026</p></div>
-      </div>
-    </Surface>
-  </S>
-)
+const PRICES = [15, 20, 25, 30]
+const Modelo = () => {
+  const [i, setI] = useState(0)
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const t = setInterval(() => setI(n => (n + 1) % PRICES.length), 2000)
+    return () => clearInterval(t)
+  }, [])
+  const price = PRICES[i]
+  const fee = COMMISSION + PAYMENT_FEE
+  const school = price - fee
+  const max = PRICES[PRICES.length - 1]
+  return (
+    <S className="bg-soft"><div className="mx-auto max-w-xl text-center">
+      <H2 className="text-primary">Solo ganamos si tú ganas</H2>
+      <p className="mb-6">Sin cuota mensual ni coste de alta. De lo que paga cada alumno, una parte fija es para OneAura y gastos, y todo lo demás es para tu escuela.</p>
+      <Tile className="text-left">
+        <div className="flex items-baseline justify-between gap-4">
+          <span className="text-sm">Lo que paga cada alumno al mes</span>
+          <span className="text-2xl font-bold tabular-nums text-primary">{price} €</span>
+        </div>
+        <div className="mt-5 flex h-3 overflow-hidden rounded-full bg-neutral-surface" aria-hidden="true">
+          <div className="bg-secondary" style={{ width: `${(fee / max) * 100}%` }} />
+          <div className="bg-primary transition-[width] duration-700 ease-out" style={{ width: `${(school / max) * 100}%` }} />
+        </div>
+        <div className="mt-3 flex justify-between gap-4 text-sm">
+          <span><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-secondary" /><b>Gastos y comisiones</b></span>
+          <span><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-primary" /><b className="text-primary">Para tu escuela</b></span>
+        </div>
+      </Tile>
+      <p className="mt-8 text-balance text-lg font-semibold leading-snug text-primary md:text-xl">Los gastos de plataforma no cambian, pongas el precio que pongas.</p>
+    </div></S>
+  )
+}
 
 const Fundador = () => (
-  <S><div className="mx-auto grid max-w-3xl items-center gap-8 md:grid-cols-[160px_1fr]">
-    <div className="grid h-40 w-40 place-items-center rounded-full bg-neutral-surface text-center text-xs text-muted">[Tu foto real]</div>
-    <div>
-      <H2 className="text-primary">Por qué creé OneAura</H2>
-      <p className="text-lg">Vi una y otra vez lo mismo: alumnos con talento que dejaban de practicar al terminar su formación porque no tenían con quién. Creé OneAura para que eso no vuelva a pasar, y para que las escuelas que forman a esos alumnos puedan seguir acompañándolos.</p>
-      <p className="mt-3 font-semibold">[Tu nombre y firma]</p>
-    </div>
+  <S><div className="mx-auto max-w-2xl">
+    <H2 className="text-primary">Por qué creamos OneAura</H2>
+    <p className="mb-3">Como estudiantes de mediumnidad en distintos cursos, notamos siempre lo mismo: practicar era lo más difícil. Cuadrar horarios entre zonas horarias, exponernos en redes sociales sin tener seguidores y otras muchas dificultades hacían que encontrar con quién practicar fuera un esfuerzo constante.</p>
+    <p>Creamos OneAura para que eso no vuelva a pasar, y para que las escuelas que forman a esos alumnos puedan seguir acompañándolos.</p>
+    <p className="mt-5 text-base font-semibold text-primary">Juan &amp; Per</p>
   </div></S>
 )
 
 const Faq = () => (
-  <S><div className="mx-auto max-w-3xl">
+  <S id="faq"><div className="mx-auto max-w-2xl">
     <H2 className="text-primary">Preguntas frecuentes</H2>
     <Accordion>
       {faq.map(([q, a], i) => (
         <Accordion.Item key={i} id={String(i)}>
-          <Accordion.Heading><Accordion.Trigger>{q}<Accordion.Indicator /></Accordion.Trigger></Accordion.Heading>
-          <Accordion.Panel><Accordion.Body>{a}</Accordion.Body></Accordion.Panel>
+          <Accordion.Heading><Accordion.Trigger className="text-sm">{q}<Accordion.Indicator /></Accordion.Trigger></Accordion.Heading>
+          <Accordion.Panel><Accordion.Body className="text-sm">{a}</Accordion.Body></Accordion.Panel>
         </Accordion.Item>
       ))}
     </Accordion>
   </div></S>
 )
 
-const BookingSection = () => (
+const Reserva = () => (
   <S id="reserva" className="bg-primary text-center text-primary-foreground">
     <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
-    <p className="mb-8 text-lg opacity-90">Reserva 20 minutos. Te enseñamos la app y calculamos juntos lo que puede generar tu escuela.</p>
-    <div className="mx-auto max-w-3xl overflow-hidden rounded-4xl bg-white text-foreground">
-      {BOOKING_URL ? <iframe title="Reservar demo" src={BOOKING_URL} className="h-[680px] w-full border-0" />
-        : <div className="p-12 text-sm text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
+    <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
+    <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white text-foreground">
+      {BOOKING_URL ? <iframe title="Reservar demo" src={`${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}embed_domain=1&embed_type=Inline&hide_gdpr_banner=1&primary_color=825355`} className="h-[700px] w-full border-0" />
+        : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
     </div>
+    {BOOKING_URL && <p className="mt-5 text-sm opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
   </S>
 )
 
 const Footer = () => (
-  <footer className="px-5 pb-10 pt-8 text-sm text-muted">
-    <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4">
+  <footer className="px-5 pb-10 pt-12 text-xs text-muted">
+    <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3">
       <span>© 2026 OneAura</span>
-      <nav className="flex flex-wrap gap-5"><a href="#">Aviso legal</a><a href="#">Privacidad</a><a href="#">Cookies</a><a href="mailto:hola@oneaura.app">Contacto</a><a href="#">WhatsApp</a><a href="#">Instagram</a><a href="#">LinkedIn</a></nav>
+      <nav className="flex flex-wrap gap-4"><a href={SCHOOLS_URL}>Acceso escuelas</a><a href="#">Aviso legal</a><a href="#">Privacidad</a><a href="#">Cookies</a><a href="mailto:hola@oneaura.app">Contacto</a><a href="#">WhatsApp</a><a href="#">Instagram</a><a href="#">LinkedIn</a></nav>
     </div>
   </footer>
 )
 
 export default function App() {
-  return <><Nav /><Hero /><Logos /><Problema /><Coste /><Solucion /><Como /><S id="calculadora"><H2 className="text-primary">¿Cuánto puede ganar tu escuela?</H2><Calculator /></S><Alumnos /><Modelo /><Fundadoras /><Fundador /><Faq /><BookingSection /><Footer /></>
+  return <><Nav /><Hero /><Logos /><Problema /><Como /><Solucion /><S id="calculadora"><H2 className="text-primary">¿Cuánto puede ganar tu escuela?</H2><Calculator /></S><Modelo /><Fundador /><Faq /><Reserva /><Footer /></>
 }
