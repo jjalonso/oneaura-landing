@@ -168,18 +168,30 @@ const Reserva = () => {
   useEffect(() => {
     if (!BOOKING_URL || !ref.current) return
     const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&text_color=ffffff&primary_color=825355`
-    const init = () => window.Calendly?.initInlineWidget({ url, parentElement: ref.current })
-    if (window.Calendly) { init(); return }
-    // React mounts this div after the page has already loaded, so a plain
-    // <script> tag's one-shot scan on load never sees it — load it here and
-    // call Calendly's own init function once it's ready.
-    const existing = document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)
-    if (existing) { existing.addEventListener('load', init); return }
-    const script = document.createElement('script')
-    script.src = CALENDLY_SCRIPT
-    script.async = true
-    script.onload = init
-    document.body.appendChild(script)
+    // No .calendly-inline-widget class here on purpose: that class makes
+    // widget.js's own auto-scan try to init this div too, racing our manual
+    // call below and leaving it blank. So Calendly's CSS never sizes the
+    // iframe either — do that by hand as soon as it appears.
+    const sizeIframe = () => {
+      const iframe = ref.current?.querySelector('iframe')
+      if (iframe) Object.assign(iframe.style, { width: '100%', height: '100%', border: '0' })
+    }
+    const observer = new MutationObserver(sizeIframe)
+    observer.observe(ref.current, { childList: true })
+    const init = () => { window.Calendly?.initInlineWidget({ url, parentElement: ref.current }); sizeIframe() }
+    if (window.Calendly) { init() } else {
+      const existing = document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)
+      if (existing) {
+        existing.addEventListener('load', init)
+      } else {
+        const script = document.createElement('script')
+        script.src = CALENDLY_SCRIPT
+        script.async = true
+        script.onload = init
+        document.body.appendChild(script)
+      }
+    }
+    return () => observer.disconnect()
   }, [])
   return (
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
@@ -187,7 +199,7 @@ const Reserva = () => {
       <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white text-foreground">
         {BOOKING_URL
-          ? <div ref={ref} className="calendly-inline-widget" style={{ minWidth: 320, height: 700 }} />
+          ? <div ref={ref} style={{ minWidth: 320, height: 700 }} />
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
       {BOOKING_URL && <p className="mt-5 text-sm opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
