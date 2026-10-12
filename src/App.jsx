@@ -145,6 +145,7 @@ const Como = () => {
         {COMO_SLIDES.map((s, i) => (
           <img key={s.src} src={s.src} alt={s.alt} className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ${s.rotate} ${i === slide ? 'opacity-100' : 'opacity-0'}`} />
         ))}
+        <span className="absolute left-4 top-4 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{slide + 1}</span>
       </div>
     </S>
   )
