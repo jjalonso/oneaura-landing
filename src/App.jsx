@@ -248,7 +248,7 @@ const Reserva = () => {
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
-      <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl text-foreground">
+      <div className="mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
         {BOOKING_URL
           ? <div ref={ref} style={{ minWidth: 320, height: 700 }} />
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
