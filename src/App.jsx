@@ -141,11 +141,15 @@ const Como = () => {
           <li key={t} className="flex"><Tile className="w-full"><span className="mb-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span><h3 className="mb-1.5 text-sm font-semibold">{t}</h3><p className="text-sm">{d}</p></Tile></li>
         ))}
       </ol>
-      <div className="relative mx-auto mt-14 h-[28rem] w-full max-w-2xl overflow-hidden md:h-[34rem]">
+      <div className="mt-6 grid grid-cols-3 gap-6" aria-hidden="true">
+        {COMO_SLIDES.map((_, i) => (
+          <div key={i} className={`h-1.5 rounded-full transition-colors duration-700 ${i === slide ? 'bg-primary' : 'bg-neutral-surface'}`} />
+        ))}
+      </div>
+      <div className="relative mx-auto mt-8 h-[28rem] w-full max-w-2xl overflow-hidden md:h-[34rem]">
         {COMO_SLIDES.map((s, i) => (
           <img key={s.src} src={s.src} alt={s.alt} className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ${s.rotate} ${i === slide ? 'opacity-100' : 'opacity-0'}`} />
         ))}
-        <span className="absolute left-4 top-4 grid h-12 w-12 place-items-center rounded-full bg-primary text-xl font-semibold text-primary-foreground">{slide + 1}</span>
       </div>
     </S>
   )
