@@ -117,25 +117,38 @@ const Solucion = () => (
   </S>
 )
 
-const Como = () => (
-  <S id="como">
-    <div className="mb-12 max-w-2xl">
-      <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">2.- Qué ganan tus alumnos</p>
-      <H2 className="text-primary !mb-4">Ellos registran su disponibilidad y nosotros los emparejamos</H2>
-      <p>Prácticas continuas con otros estudiantes de la red OneAura. Sin esfuerzo, nuestro sistema los mantiene practicando en rutina.</p>
-    </div>
-    <ol className="grid items-stretch gap-6 md:grid-cols-3">
-      {[['Marcan su disponibilidad.', 'Eligen sus franjas horarias disponibles, de lunes a domingo.'], ['Nuestra IA los empareja.', 'Nuestra IA empareja estudiantes y los notifica para una sesión programada con entre 2 y 7 días de antelación.'], ['Videollamadas integradas.', 'Les avisamos cuando llega la hora y se unen a una videollamada de 60 minutos. Al terminar, pueden valorar a su compañero.']].map(([t, d], i) => (
-        <li key={t} className="flex"><Tile className="w-full"><span className="mb-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span><h3 className="mb-1.5 text-sm font-semibold">{t}</h3><p className="text-sm">{d}</p></Tile></li>
-      ))}
-    </ol>
-    <div className="mt-14 grid items-center gap-6 md:grid-cols-3">
-      <img src={availabilityImg} alt="Panel de disponibilidad semanal del alumno, con sus franjas horarias" className="w-full" />
-      <img src={dashboardImg} alt="Panel de la escuela con las próximas sesiones y el historial de un alumno" className="w-full" />
-      <img src={videollamadaImg} alt="Videollamada de práctica entre dos alumnas" className="mx-auto w-full max-w-[14rem]" />
-    </div>
-  </S>
-)
+const COMO_SLIDES = [
+  { src: availabilityImg, alt: 'Panel de disponibilidad semanal del alumno, con sus franjas horarias' },
+  { src: dashboardImg, alt: 'Panel de la escuela con las próximas sesiones y el historial de un alumno' },
+  { src: videollamadaImg, alt: 'Videollamada de práctica entre dos alumnas' },
+]
+const Como = () => {
+  const [slide, setSlide] = useState(0)
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const t = setInterval(() => setSlide(n => (n + 1) % COMO_SLIDES.length), 2000)
+    return () => clearInterval(t)
+  }, [])
+  return (
+    <S id="como">
+      <div className="mb-12 max-w-2xl">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">2.- Qué ganan tus alumnos</p>
+        <H2 className="text-primary !mb-4">Ellos registran su disponibilidad y nosotros los emparejamos</H2>
+        <p>Prácticas continuas con otros estudiantes de la red OneAura. Sin esfuerzo, nuestro sistema los mantiene practicando en rutina.</p>
+      </div>
+      <ol className="grid items-stretch gap-6 md:grid-cols-3">
+        {[['Marcan su disponibilidad.', 'Eligen sus franjas horarias disponibles, de lunes a domingo.'], ['Nuestra IA los empareja.', 'Nuestra IA empareja estudiantes y los notifica para una sesión programada con entre 2 y 7 días de antelación.'], ['Videollamadas integradas.', 'Les avisamos cuando llega la hora y se unen a una videollamada de 60 minutos. Al terminar, pueden valorar a su compañero.']].map(([t, d], i) => (
+          <li key={t} className="flex"><Tile className="w-full"><span className="mb-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span><h3 className="mb-1.5 text-sm font-semibold">{t}</h3><p className="text-sm">{d}</p></Tile></li>
+        ))}
+      </ol>
+      <div className="relative mx-auto mt-14 h-[22rem] w-full max-w-xl overflow-hidden rounded-3xl bg-soft md:h-[28rem]">
+        {COMO_SLIDES.map((s, i) => (
+          <img key={s.src} src={s.src} alt={s.alt} className={`absolute inset-0 h-full w-full object-contain p-6 transition-opacity duration-700 ${i === slide ? 'opacity-100' : 'opacity-0'}`} />
+        ))}
+      </div>
+    </S>
+  )
+}
 
 const PRICES = [15, 20, 25, 30]
 const Modelo = () => {
