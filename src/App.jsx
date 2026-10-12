@@ -250,7 +250,7 @@ const Reserva = () => {
       <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <div className="mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
         {BOOKING_URL
-          ? <div ref={ref} className="transition-[height] duration-500 ease-out" style={{ minWidth: 320, height: 700 }} />
+          ? <div ref={ref} className="transition-[height] duration-1000 ease-out" style={{ minWidth: 320, height: 700 }} />
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
       {BOOKING_URL && <p className="mt-5 text-sm opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
