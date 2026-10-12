@@ -46,11 +46,17 @@ const WhatsAppFloat = () => {
 }
 
 const Nav = () => (
-  <header className="glass-card sticky z-50 px-5" style={{ top: 'env(safe-area-inset-top, 0px)' }}>
-    <div className="mx-auto flex h-14 max-w-6xl items-center justify-between">
-      <a href="#" aria-label="OneAura"><img src={logoImg} alt="OneAura" className="h-7 w-auto" /></a>
+  <header className="glass-card sticky z-50 px-4 sm:px-5" style={{ top: 'env(safe-area-inset-top, 0px)' }}>
+    {/* Nada encoge: logo y boton llevan shrink-0, asi que lo que cede es
+        "Acceso escuelas", que parte en dos lineas. Por eso la fila es min-h-14
+        y no h-14 — con alto fijo la segunda linea se montaba sobre el logo.
+        Y flex-wrap por si aun asi no cabe (~300px): el grupo de la derecha baja
+        a su propia linea en vez de desbordar la pagina, que es lo que ensanchaba
+        el documento y dejaba una franja blanca a la derecha. */}
+    <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center justify-between gap-y-2 py-2">
+      <a href="#" aria-label="OneAura" className="shrink-0"><img src={logoImg} alt="OneAura" className="h-7 w-auto" /></a>
       <nav className="hidden gap-6 text-sm md:flex"><a href="#como">Cómo funciona</a><a href="#calculadora">Calculadora</a><a href="#faq">Preguntas</a></nav>
-      <div className="flex items-center gap-4"><a href={SCHOOLS_URL} className="text-sm text-neutral transition hover:text-primary">Acceso escuelas</a><Reservar>Reservar demo</Reservar></div>
+      <div className="flex items-center gap-3 sm:gap-4"><a href={SCHOOLS_URL} className="text-sm leading-tight text-neutral transition hover:text-primary">Acceso escuelas</a><Reservar className="shrink-0">Reservar demo</Reservar></div>
     </div>
   </header>
 )
@@ -73,11 +79,12 @@ const Hero = () => (
   </S>
 )
 
-const Logos = () => LOGOS.length === 0 ? null : (
+const VISIBLE_LOGOS = LOGOS.filter(l => !l.hidden)
+const Logos = () => VISIBLE_LOGOS.length === 0 ? null : (
   <S className="!pt-14 !pb-24 md:!pb-32">
     <p className="mb-8 text-center text-base font-semibold text-neutral md:text-lg">Escuelas que ya forman parte de OneAura</p>
     <div className="flex flex-col items-center gap-y-8">
-      {[LOGOS.slice(0, 3), LOGOS.slice(3)].map((row, i) => (
+      {[VISIBLE_LOGOS.slice(0, 3), VISIBLE_LOGOS.slice(3)].filter(row => row.length).map((row, i) => (
         <div key={i} className="flex flex-wrap items-center justify-center gap-x-16 gap-y-8">
           {row.map(l => <img key={l.name} src={l.src} alt={l.name} className={`${l.cls} w-auto opacity-80 mix-blend-multiply grayscale transition hover:opacity-100 hover:grayscale-0`} />)}
         </div>

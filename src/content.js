@@ -10,12 +10,13 @@ import rita from './assets/logos/rita.webp'
 import comunicaciones from './assets/logos/comunicaciones.webp'
 import iker from './assets/logos/iker.webp'
 // Escuelas que ya forman parte de OneAura, en orden de importancia; cls controla el tamaño: todos con la misma altura.
+// hidden: true lo deja fuera de la web sin borrarlo — quita la marca para volver a mostrarlo.
 export const LOGOS = [
   { name: 'Inés Justicia', src: ines, cls: 'h-[32px]' },
   { name: 'Biel Giner', src: biel, cls: 'h-[17px]' },
   { name: 'Iker Tzaile', src: iker, cls: 'h-[28px]' },
-  { name: 'Comunicaciones de Luz · María Fernanda', src: comunicaciones, cls: 'h-[28px]' },
-  { name: 'Rita Klair', src: rita, cls: 'h-[28px]' },
+  { name: 'Comunicaciones de Luz · María Fernanda', src: comunicaciones, cls: 'h-[28px]', hidden: true },
+  { name: 'Rita Klair', src: rita, cls: 'h-[28px]', hidden: true },
 ]
 export const COMMISSION = 8   // € fijos por suscripción y mes para OneAura
 export const PAYMENT_FEE = 0.8 // € aprox. de coste de pasarela de pago por suscripción (se agrupa con OneAura)
