@@ -118,9 +118,9 @@ const Solucion = () => (
 )
 
 const COMO_SLIDES = [
-  { src: availabilityImg, alt: 'Panel de disponibilidad semanal del alumno, con sus franjas horarias' },
-  { src: dashboardImg, alt: 'Panel de la escuela con las próximas sesiones y el historial de un alumno' },
-  { src: videollamadaImg, alt: 'Videollamada de práctica entre dos alumnas' },
+  { src: availabilityImg, alt: 'Panel de disponibilidad semanal del alumno, con sus franjas horarias', rotate: '-rotate-2' },
+  { src: dashboardImg, alt: 'Panel de la escuela con las próximas sesiones y el historial de un alumno', rotate: 'rotate-2' },
+  { src: videollamadaImg, alt: 'Videollamada de práctica entre dos alumnas', rotate: '' },
 ]
 const Como = () => {
   const [slide, setSlide] = useState(0)
@@ -143,7 +143,7 @@ const Como = () => {
       </ol>
       <div className="relative mx-auto mt-14 h-[28rem] w-full max-w-2xl overflow-hidden md:h-[34rem]">
         {COMO_SLIDES.map((s, i) => (
-          <img key={s.src} src={s.src} alt={s.alt} className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ${i === slide ? 'opacity-100' : 'opacity-0'}`} />
+          <img key={s.src} src={s.src} alt={s.alt} className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ${s.rotate} ${i === slide ? 'opacity-100' : 'opacity-0'}`} />
         ))}
       </div>
     </S>
