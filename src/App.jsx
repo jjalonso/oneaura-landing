@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Accordion, Button, Card, Chip } from '@heroui/react'
 import Calculator from './Calculator'
 import { BOOKING_URL, SCHOOLS_URL, COMMISSION, PAYMENT_FEE, LOGOS, faq } from './content'
@@ -162,18 +162,38 @@ const Faq = () => (
   </div></S>
 )
 
-const Reserva = () => (
-  <S id="reserva" className="bg-primary text-center text-primary-foreground">
-    <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
-    <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
-    <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white text-foreground">
-      {BOOKING_URL
-        ? <div className="calendly-inline-widget" data-url={`${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&text_color=ffffff&primary_color=825355`} style={{ minWidth: 320, height: 700 }} />
-        : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
-    </div>
-    {BOOKING_URL && <p className="mt-5 text-xs opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
-  </S>
-)
+const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
+const Reserva = () => {
+  const ref = useRef(null)
+  useEffect(() => {
+    if (!BOOKING_URL || !ref.current) return
+    const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&text_color=ffffff&primary_color=825355`
+    const init = () => window.Calendly?.initInlineWidget({ url, parentElement: ref.current })
+    if (window.Calendly) { init(); return }
+    // React mounts this div after the page has already loaded, so a plain
+    // <script> tag's one-shot scan on load never sees it — load it here and
+    // call Calendly's own init function once it's ready.
+    const existing = document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)
+    if (existing) { existing.addEventListener('load', init); return }
+    const script = document.createElement('script')
+    script.src = CALENDLY_SCRIPT
+    script.async = true
+    script.onload = init
+    document.body.appendChild(script)
+  }, [])
+  return (
+    <S id="reserva" className="bg-primary text-center text-primary-foreground">
+      <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
+      <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
+      <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white text-foreground">
+        {BOOKING_URL
+          ? <div ref={ref} style={{ minWidth: 320, height: 700 }} />
+          : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
+      </div>
+      {BOOKING_URL && <p className="mt-5 text-xs opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
+    </S>
+  )
+}
 
 const Footer = () => (
   <footer className="px-5 pb-10 pt-12 text-xs text-muted">
