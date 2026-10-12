@@ -3,7 +3,7 @@ import Calculator from './Calculator'
 import { BOOKING_URL, SLOTS_LEFT, LOGOS, faq } from './content'
 
 const go = id => () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-const Reservar = ({ children, variant = 'primary', size = 'lg', className = '' }) => (
+const BookingButton = ({ children, variant = 'primary', size = 'lg', className = '' }) => (
   <Button variant={variant} size={size} className={className} onPress={go('reserva')}>{children}</Button>
 )
 const S = ({ id, className = '', children }) => (
@@ -26,7 +26,7 @@ const Nav = () => (
       <nav className="hidden gap-6 text-sm md:flex">
         <a href="#como">Cómo funciona</a><a href="#calculadora">Calculadora</a><a href="#fundadores">Fundadores</a>
       </nav>
-      <Reservar size="sm">Reservar demo</Reservar>
+      <BookingButton size="sm">Reservar demo</BookingButton>
     </div>
   </header>
 )
@@ -39,7 +39,7 @@ const Hero = () => (
         <h1 className="text-4xl font-extrabold leading-tight text-primary md:text-6xl">Tu formación termina. Tus ingresos, no.</h1>
         <p className="mt-5 text-lg">Tu propia app y tu propio sistema de suscripciones para que tus alumnos sigan practicando después del curso, y tu escuela facture todos los meses.</p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Reservar>Reserva tu demo gratuita de 20 minutos</Reservar>
+          <BookingButton>Reserva tu demo gratuita de 20 minutos</BookingButton>
           <Button variant="ghost" size="lg" onPress={go('calculadora')}>Calcula cuánto puede ganar tu escuela ↓</Button>
         </div>
         <p className="mt-5 text-sm text-muted">Sin coste de alta · Sin permanencia · Plazas limitadas para escuelas fundadoras</p>
@@ -83,7 +83,12 @@ const Problema = () => (
     </div>
     <div className="mt-12 grid gap-5 md:grid-cols-3">
       {[['Se quedan sin con quién practicar.', 'La familia y los amigos se acaban pronto.'], ['Buscan prácticas fuera de tu escuela.', 'Acaban en grupos de redes sociales, con desconocidos y sin ningún criterio.'], ['El vínculo se rompe.', 'Cuando vuelvan a formarse, puede que no sea contigo.']].map(([t, d]) => (
-        <Card key={t}><h3 className="mb-2 font-bold text-primary">{t}</h3><p className="text-sm">{d}</p></Card>
+        <Card key={t}>
+          <Card.Header>
+            <Card.Title className="text-base text-primary">{t}</Card.Title>
+            <Card.Description className="text-sm">{d}</Card.Description>
+          </Card.Header>
+        </Card>
       ))}
     </div>
   </S>
@@ -113,7 +118,15 @@ const Como = () => (
     <H2 className="text-primary">En marcha en 3 pasos</H2>
     <ol className="grid gap-5 md:grid-cols-3">
       {[['Configuramos tu escuela.', 'Tu logo, tu precio y tus franjas de práctica. Lo hacemos contigo en una sesión.'], ['Lo presentas al terminar el curso.', 'Tus alumnos se suscriben como la forma oficial de seguir practicando con tu escuela.'], ['Practican cada semana y tú cobras cada mes.', 'Nosotros nos ocupamos de los horarios, las parejas y la tecnología.']].map(([t, d], i) => (
-        <li key={t}><Card><span className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-primary font-bold text-primary-foreground">{i + 1}</span><h3 className="mb-1 font-bold">{t}</h3><p className="text-sm">{d}</p></Card></li>
+        <li key={t}>
+          <Card>
+            <span className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-primary font-bold text-primary-foreground">{i + 1}</span>
+            <Card.Header>
+              <Card.Title className="text-base">{t}</Card.Title>
+              <Card.Description className="text-sm">{d}</Card.Description>
+            </Card.Header>
+          </Card>
+        </li>
       ))}
     </ol>
   </S>
@@ -146,7 +159,7 @@ const Fundadoras = () => (
         <p className="mb-4">Las primeras escuelas tendrán condiciones que no volveremos a ofrecer:</p>
         <ul className="mb-6 space-y-2">{['Configuración de tu app sin coste', 'Condiciones especiales durante los primeros meses', 'Acompañamiento personal en el lanzamiento', 'Voz en las próximas funciones de OneAura'].map(x => <li key={x}><span className="mr-2 text-primary">✓</span>{x}</li>)}</ul>
         <p className="mb-5 font-bold text-primary">Quedan {SLOTS_LEFT} plazas</p>
-        <Reservar>Solicitar mi plaza de fundadora</Reservar>
+        <BookingButton>Solicitar mi plaza de fundadora</BookingButton>
       </div>
       <div className="mx-auto grid h-56 w-56 place-items-center rounded-full bg-primary text-center text-primary-foreground shadow-sanctuary">
         <div><p className="text-3xl text-secondary">✦</p><p className="px-4 font-bold">Escuela Fundadora</p><p className="text-sm text-secondary">OneAura 2026</p></div>
@@ -180,7 +193,7 @@ const Faq = () => (
   </div></S>
 )
 
-const Reserva = () => (
+const BookingSection = () => (
   <S id="reserva" className="bg-primary text-center text-primary-foreground">
     <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
     <p className="mb-8 text-lg opacity-90">Reserva 20 minutos. Te enseñamos la app y calculamos juntos lo que puede generar tu escuela.</p>
@@ -201,5 +214,5 @@ const Footer = () => (
 )
 
 export default function App() {
-  return <><Nav /><Hero /><Logos /><Problema /><Coste /><Solucion /><Como /><S id="calculadora"><H2 className="text-primary">¿Cuánto puede ganar tu escuela?</H2><Calculator /></S><Alumnos /><Modelo /><Fundadoras /><Fundador /><Faq /><Reserva /><Footer /></>
+  return <><Nav /><Hero /><Logos /><Problema /><Coste /><Solucion /><Como /><S id="calculadora"><H2 className="text-primary">¿Cuánto puede ganar tu escuela?</H2><Calculator /></S><Alumnos /><Modelo /><Fundadoras /><Fundador /><Faq /><BookingSection /><Footer /></>
 }
