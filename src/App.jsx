@@ -192,7 +192,7 @@ const Reserva = () => {
   const ref = useRef(null)
   useEffect(() => {
     if (!BOOKING_URL || !ref.current) return
-    const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&text_color=ffffff&primary_color=825355`
+    const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355`
     // No .calendly-inline-widget class here on purpose: that class makes
     // widget.js's own auto-scan try to init this div too, racing our manual
     // call below and leaving it blank. So Calendly's CSS never sizes the
