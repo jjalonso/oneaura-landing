@@ -1,0 +1,65 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+@layer base {
+  :root, [data-theme="sanctuary"] {
+    color-scheme: light;
+    --primary: #825355;
+    --secondary: #f7c5c5;
+    --soft: color-mix(in oklch, var(--secondary) 45%, white);
+    --background: #fbf9f9;
+    --primary-foreground: #ffffff;
+    --secondary-foreground: #59393a;
+    --soft-foreground: var(--neutral);
+    --neutral: #645d5e;
+    --muted: rgb(127, 126, 126);
+    --danger: #d45e5e;
+    --neutral-surface: #ebe9e9;
+    --border-width: 0px;
+    --default: #FAFAFA;
+    --foreground: var(--neutral);
+    --accent: var(--primary);
+    --accent-foreground: #FFFFFF;
+    --separator: rgba(49, 51, 51, 0.05);
+    --surface-shadow: 0 12px 48px 0 rgba(49, 51, 51, 0.05);
+    --glass-blur: blur(24px);
+    --glass-bg: rgba(255, 255, 255, 0.6);
+  }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(5rem + env(safe-area-inset-top, 0px)); }
+  body { @apply font-body antialiased bg-background text-foreground; }
+}
+
+@theme inline {
+  --font-body: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif;
+  --color-accent: var(--accent);
+  --color-default: var(--default);
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-soft: var(--soft);
+  --color-soft-foreground: var(--soft-foreground);
+  --color-neutral-surface: var(--neutral-surface);
+  --color-neutral: var(--neutral);
+  --color-muted: var(--muted);
+  --color-danger: var(--danger);
+  --color-surface-secondary: var(--soft);
+  --color-surface-tertiary: var(--neutral-surface);
+  --shadow-sanctuary: var(--surface-shadow);
+}
+
+@layer components {
+  .button--primary   { @apply bg-primary! text-primary-foreground hover:bg-primary hover:brightness-125 active:bg-primary active:brightness-125; }
+  .button--secondary { @apply bg-secondary! text-secondary-foreground hover:bg-secondary hover:brightness-[1.05] active:bg-secondary active:brightness-[1.05]; }
+  .button--tertiary  { @apply bg-soft! text-soft-foreground hover:bg-soft hover:brightness-[1.03] active:bg-soft active:brightness-[1.03]; }
+  .button--ghost     { @apply bg-transparent text-foreground hover:bg-transparent active:bg-transparent; }
+  .card    { @apply rounded-4xl p-6; }
+  .surface { @apply rounded-4xl p-6; }
+}
+
+@utility glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  @apply shadow-sanctuary;
+}
