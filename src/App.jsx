@@ -126,7 +126,7 @@ const Como = () => {
   const [slide, setSlide] = useState(0)
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const t = setInterval(() => setSlide(n => (n + 1) % COMO_SLIDES.length), 2000)
+    const t = setInterval(() => setSlide(n => (n + 1) % COMO_SLIDES.length), 3000)
     return () => clearInterval(t)
   }, [])
   return (
@@ -141,9 +141,9 @@ const Como = () => {
           <li key={t} className="flex"><Tile className="w-full"><span className="mb-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span><h3 className="mb-1.5 text-sm font-semibold">{t}</h3><p className="text-sm">{d}</p></Tile></li>
         ))}
       </ol>
-      <div className="relative mx-auto mt-14 h-[22rem] w-full max-w-xl overflow-hidden rounded-3xl bg-soft md:h-[28rem]">
+      <div className="relative mx-auto mt-14 h-[28rem] w-full max-w-2xl overflow-hidden md:h-[34rem]">
         {COMO_SLIDES.map((s, i) => (
-          <img key={s.src} src={s.src} alt={s.alt} className={`absolute inset-0 h-full w-full object-contain p-6 transition-opacity duration-700 ${i === slide ? 'opacity-100' : 'opacity-0'}`} />
+          <img key={s.src} src={s.src} alt={s.alt} className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ${i === slide ? 'opacity-100' : 'opacity-0'}`} />
         ))}
       </div>
     </S>
