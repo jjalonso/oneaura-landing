@@ -26,8 +26,8 @@ export default function Calculator() {
         ))}
       </div>
       <div className="flex flex-col justify-center gap-2 rounded-2xl bg-primary p-5 text-primary-foreground">
-        <p className="text-3xl font-bold tabular-nums">{total.toLocaleString('es-ES')} €</p>
-        <p className="text-xs opacity-85">Ingresos recurrentes de alumnos que, sin OneAura, ya habrías perdido.</p>
+        <p className="text-4xl font-bold tabular-nums">{total.toLocaleString('es-ES')} €</p>
+        <p className="text-sm opacity-85">Ingresos recurrentes de alumnos que, sin OneAura, ya habrías perdido.</p>
         <p className="text-xs opacity-80">{v.pr} € − Gastos y comisiones = {fmt(net)} € para tu escuela.</p>
         <Button variant="secondary" size="sm" className="mt-3" onPress={() => document.getElementById('reserva')?.scrollIntoView({ behavior: 'smooth' })}>Quiero verlo con mis números → Reservar demo</Button>
       </div>
