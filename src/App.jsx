@@ -170,7 +170,7 @@ const Modelo = () => {
   return (
     <S className="bg-soft"><div className="mx-auto max-w-xl text-center">
       <H2 className="text-primary">Solo ganamos si tú ganas</H2>
-      <p className="mb-6">Sin cuota mensual ni coste de alta. De lo que paga cada alumno, una parte fija es para OneAura y gastos, y todo lo demás es para tu escuela.</p>
+      <p className="mb-6">Sin cuota mensual ni coste de alta. De lo que paga cada alumno, una parte fija es para <b>OneAura</b> y gastos, y todo lo demás es para <b>tu escuela</b>.</p>
       <Tile className="text-left">
         <div className="flex items-baseline justify-between gap-4">
           <span className="text-sm">Lo que paga cada alumno al mes</span>
