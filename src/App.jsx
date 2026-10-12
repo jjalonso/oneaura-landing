@@ -262,7 +262,7 @@ const Footer = () => (
   <footer id="site-footer" className="px-5 pb-10 pt-12 text-xs text-muted">
     <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3">
       <span>© 2026 OneAura</span>
-      <nav className="flex flex-wrap gap-4"><a href={SCHOOLS_URL}>Acceso escuelas</a><a href={TERMS_URL}>Privacidad y Términos</a><a href="mailto:hola@oneaura.app">Contacto</a></nav>
+      <nav className="flex flex-wrap gap-4"><a href={SCHOOLS_URL}>Acceso escuelas</a><a href={TERMS_URL}>Privacy &amp; Terms</a><a href="mailto:hola@oneaura.app">Contacto</a></nav>
     </div>
   </footer>
 )
