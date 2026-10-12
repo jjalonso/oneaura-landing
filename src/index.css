@@ -189,6 +189,11 @@
   .button--ghost     { @apply bg-transparent text-foreground hover:bg-transparent active:bg-transparent; }
   .card    { @apply rounded-4xl p-6; }
   .surface { @apply rounded-4xl p-6; }
+  /* HeroUI's own .slider uses a bare 1fr for the label column, which
+     can't shrink below its content's width — on a narrow screen that
+     pushes the output value (and everything after it) past the edge
+     of the card instead of wrapping. minmax(0, 1fr) lets it shrink. */
+  .slider  { grid-template-columns: minmax(0, 1fr) auto; }
 }
 
 @utility glass-card {
