@@ -216,21 +216,9 @@ const Faq = () => (
 const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
 const Reserva = () => {
   const ref = useRef(null)
-  const [height, setHeight] = useState(700)
-  useEffect(() => {
-    // Calendly posts its content height on every step of the flow; follow it
-    // instead of a fixed height that's too tall on one step and too short on another.
-    const onMessage = e => {
-      if (e.origin !== 'https://calendly.com' || e.data?.event !== 'calendly.page_height') return
-      const h = parseInt(e.data.payload?.height, 10)
-      if (h > 0) setHeight(h)
-    }
-    window.addEventListener('message', onMessage)
-    return () => window.removeEventListener('message', onMessage)
-  }, [])
   useEffect(() => {
     if (!BOOKING_URL || !ref.current) return
-    const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355`
+    const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=825355`
     // No .calendly-inline-widget class here on purpose: that class makes
     // widget.js's own auto-scan try to init this div too, racing our manual
     // call below and leaving it blank. So Calendly's CSS never sizes the
@@ -241,7 +229,7 @@ const Reserva = () => {
     }
     const observer = new MutationObserver(sizeIframe)
     observer.observe(ref.current, { childList: true })
-    const init = () => { window.Calendly?.initInlineWidget({ url, parentElement: ref.current }); sizeIframe() }
+    const init = () => { window.Calendly?.initInlineWidget({ url, parentElement: ref.current, resize: true }); sizeIframe() }
     if (window.Calendly) { init() } else {
       const existing = document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)
       if (existing) {
@@ -260,9 +248,9 @@ const Reserva = () => {
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
-      <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white text-foreground">
+      <div className="mx-auto max-w-2xl text-foreground">
         {BOOKING_URL
-          ? <div ref={ref} style={{ minWidth: 320, height }} />
+          ? <div ref={ref} style={{ minWidth: 320, height: 700 }} />
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
       {BOOKING_URL && <p className="mt-5 text-sm opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
