@@ -31,7 +31,7 @@ export default function Calculator() {
         <p className="text-xs opacity-80">{v.pr} € − Gastos y comisiones = {fmt(net)} € para tu escuela.</p>
         <Button variant="secondary" size="sm" className="mt-3" onPress={() => document.getElementById('reserva')?.scrollIntoView({ behavior: 'smooth' })}>Quiero verlo con mis números → Reservar demo</Button>
       </div>
-      <p className="text-xs text-muted md:col-span-2">Estimación orientativa. Sin contar las bajas.</p>
+      <p className="text-xs text-muted md:col-span-2">Estimación orientativa. Sin contar las bajas, impuestos y otros factores.</p>
     </div>
   )
 }
