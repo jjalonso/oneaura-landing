@@ -5,6 +5,7 @@ import { BOOKING_URL, SCHOOLS_URL, TERMS_URL, WHATSAPP_URL, COMMISSION, PAYMENT_
 const fmt = n => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 import heroImg from './assets/hero.webp'
 import availabilityImg from './assets/availability.webp'
+import dashboardImg from './assets/dashboard.webp'
 import videollamadaImg from './assets/videollamada.webp'
 import logoImg from './assets/oneaura.webp'
 import chatImg from './assets/chat.webp'
@@ -128,9 +129,10 @@ const Como = () => (
         <li key={t} className="flex"><Tile className="w-full"><span className="mb-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span><h3 className="mb-1.5 text-sm font-semibold">{t}</h3><p className="text-sm">{d}</p></Tile></li>
       ))}
     </ol>
-    <div className="mt-14 grid gap-6 md:grid-cols-2">
+    <div className="mt-14 grid items-center gap-6 md:grid-cols-3">
       <img src={availabilityImg} alt="Panel de disponibilidad semanal del alumno, con sus franjas horarias" className="w-full" />
-      <img src={videollamadaImg} alt="Videollamada de práctica entre dos alumnas" className="mx-auto w-full max-w-xs" />
+      <img src={dashboardImg} alt="Panel de la escuela con las próximas sesiones y el historial de un alumno" className="w-full" />
+      <img src={videollamadaImg} alt="Videollamada de práctica entre dos alumnas" className="mx-auto w-full max-w-[14rem]" />
     </div>
   </S>
 )
