@@ -29,7 +29,7 @@ export default function Calculator() {
         <p className="text-4xl font-bold tabular-nums">{total.toLocaleString('es-ES')} €</p>
         <p className="text-sm opacity-85">Ingresos recurrentes de alumnos que, sin OneAura, ya habrías perdido.</p>
         <p className="text-xs opacity-80">{v.pr} € − Gastos y comisiones = {fmt(net)} € para tu escuela.</p>
-        <Button variant="secondary" size="sm" className="mt-3 h-auto min-h-9 w-full whitespace-normal py-2 text-center" onPress={() => document.getElementById('reserva')?.scrollIntoView({ behavior: 'smooth' })}>Reservar demostración</Button>
+        <Button variant="secondary" size="sm" className="mt-3 h-auto min-h-9 w-full whitespace-normal py-2 text-center" onPress={() => document.getElementById('reserva')?.scrollIntoView({ behavior: 'smooth' })}>Reserva tu demo</Button>
       </div>
       <p className="-mt-2 text-xs text-muted md:col-span-2 md:mt-0">Estimación orientativa. Sin contar las bajas, impuestos y otros factores.</p>
     </div>
