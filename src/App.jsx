@@ -126,7 +126,7 @@ const Como = () => {
   const [slide, setSlide] = useState(0)
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const t = setInterval(() => setSlide(n => (n + 1) % COMO_SLIDES.length), 3000)
+    const t = setInterval(() => setSlide(n => (n + 1) % COMO_SLIDES.length), 4000)
     return () => clearInterval(t)
   }, [])
   return (
