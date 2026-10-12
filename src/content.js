@@ -1,7 +1,19 @@
+import comunicacionesDeLuz from './assets/logos-escuelas/comunicaciones-de-luz.webp'
+import ritaKlair from './assets/logos-escuelas/rita-klair.webp'
+import bielGiner from './assets/logos-escuelas/biel-giner.webp'
+import inesJusticia from './assets/logos-escuelas/ines-justicia.webp'
+import ikerTzaile from './assets/logos-escuelas/iker-tzaile.webp'
+
 // Textos y ajustes editables en un solo sitio.
 export const BOOKING_URL = '' // enlace de Calendly / Cal.com para activar el embed
 export const SLOTS_LEFT = 10  // actualízalo a mano; debe ser un número real
-export const LOGOS = []       // [{name, src}] solo escuelas realmente participantes
+export const LOGOS = [        // solo escuelas realmente participantes
+  { name: 'Comunicaciones de Luz', src: comunicacionesDeLuz },
+  { name: 'Rita Klair', src: ritaKlair },
+  { name: 'Biel Giner', src: bielGiner },
+  { name: 'Inés Justicia', src: inesJusticia },
+  { name: 'Iker Tzaile', src: ikerTzaile },
+]
 export const PRICE = 16       // € por defecto en la calculadora
 export const faq = [
   ['¿Necesito saber de tecnología?', 'No. Lo configuramos contigo y tus alumnos solo descargan la app.'],

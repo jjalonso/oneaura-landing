@@ -1,6 +1,9 @@
 import { Accordion, Button, Card, Chip, Surface } from '@heroui/react'
 import Calculator from './Calculator'
 import { BOOKING_URL, SLOTS_LEFT, LOGOS, faq } from './content'
+import logoOneAura from './assets/logo-oneaura.webp'
+import heroApp from './assets/hero-app.webp'
+import chatWhatsapp from './assets/seccion1-chat-whatsapp.webp'
 
 const go = id => () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 const BookingButton = ({ children, variant = 'primary', size = 'lg', className = '' }) => (
@@ -11,18 +14,10 @@ const S = ({ id, className = '', children }) => (
 )
 const H2 = ({ children, className = '' }) => <h2 className={`mb-6 text-3xl font-extrabold leading-tight md:text-4xl ${className}`}>{children}</h2>
 
-const Phone = ({ children, className = '' }) => (
-  <div className={`w-56 rounded-4xl bg-white p-2 shadow-sanctuary ${className}`}>
-    <div className="min-h-[270px] rounded-3xl bg-background p-4 text-sm">
-      <p className="mb-3 text-xs font-bold text-primary">✦ Escuela Luz Interior</p>{children}
-    </div>
-  </div>
-)
-
 const Nav = () => (
   <header className="glass-card sticky z-50 px-5" style={{ top: 'env(safe-area-inset-top, 0px)' }}>
     <div className="mx-auto flex h-16 max-w-5xl items-center justify-between">
-      <a href="#" className="text-xl font-extrabold text-primary">OneAura</a>
+      <a href="#"><img src={logoOneAura} alt="OneAura" className="h-7 w-auto" /></a>
       <nav className="hidden gap-6 text-sm md:flex">
         <a href="#como">Cómo funciona</a><a href="#calculadora">Calculadora</a><a href="#fundadores">Fundadores</a>
       </nav>
@@ -44,20 +39,7 @@ const Hero = () => (
         </div>
         <p className="mt-5 text-sm text-muted">Sin coste de alta · Sin permanencia · Plazas limitadas para escuelas fundadoras</p>
       </div>
-      <div className="relative mx-auto h-[360px] w-full max-w-sm">
-        <Phone className="absolute right-0 top-6 scale-90 opacity-60 blur-[1px]">
-          <p className="text-xs text-muted">Suscriptores activos</p><p className="text-2xl font-bold">42</p>
-          <p className="mt-3 text-xs text-muted">Ingresos este mes</p><p className="text-2xl font-bold">336 €</p>
-        </Phone>
-        <Phone className="absolute left-0 top-0 -rotate-6">
-          <Card className="!p-3">
-            <p className="text-xs text-muted">Tu próxima práctica</p>
-            <p className="font-bold">Jueves 20:00</p>
-            <p className="text-xs">Círculo con Laura, Marta y Javier</p>
-            <div className="mt-3 rounded-full bg-primary py-2 text-center text-xs font-semibold text-primary-foreground">Unirme a la videollamada</div>
-          </Card>
-        </Phone>
-      </div>
+      <img src={heroApp} alt="La app de OneAura, con el nombre de tu escuela" className="mx-auto w-full max-w-sm" />
     </div>
   </S>
 )
@@ -76,10 +58,7 @@ const Problema = () => (
         <H2>El último día de curso empiezas a perder a tus alumnos.</H2>
         <p className="text-lg">Les das unas cuantas prácticas y les animas a seguir quedando. La intención es buena, pero en unas semanas el grupo de WhatsApp se apaga y cada uno vuelve a su vida.</p>
       </div>
-      <Surface variant="tertiary" className="mx-auto w-full max-w-xs text-muted">
-        <p className="mb-3 text-center text-xs font-semibold">Prácticas Promoción Marzo ✨</p>
-        <div className="ml-auto max-w-[85%] rounded-2xl bg-white p-3 text-sm">¿Alguien quiere practicar esta semana? 🙏<p className="mt-1 text-right text-[10px]">hace 3 semanas · sin respuesta</p></div>
-      </Surface>
+      <img src={chatWhatsapp} alt="Grupo de WhatsApp de prácticas, sin respuesta desde hace semanas" className="mx-auto w-full max-w-xs" />
     </div>
     <div className="mt-12 grid gap-5 md:grid-cols-3">
       {[['Se quedan sin con quién practicar.', 'La familia y los amigos se acaban pronto.'], ['Buscan prácticas fuera de tu escuela.', 'Acaban en grupos de redes sociales, con desconocidos y sin ningún criterio.'], ['El vínculo se rompe.', 'Cuando vuelvan a formarse, puede que no sea contigo.']].map(([t, d]) => (
