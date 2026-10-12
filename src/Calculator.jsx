@@ -25,7 +25,7 @@ export default function Calculator() {
           </Slider>
         ))}
       </div>
-      <div className="-mx-8 flex flex-col justify-center gap-2 rounded-2xl bg-primary p-5 text-primary-foreground md:mx-0">
+      <div className="-mx-9 flex flex-col justify-center gap-2 rounded-2xl bg-primary p-5 text-primary-foreground md:mx-0">
         <p className="text-4xl font-bold tabular-nums">{total.toLocaleString('es-ES')} €</p>
         <p className="text-sm opacity-85">Ingresos recurrentes de alumnos que, sin OneAura, ya habrías perdido.</p>
         <p className="text-xs opacity-80">{v.pr} € − Gastos y comisiones = {fmt(net)} € para tu escuela.</p>
