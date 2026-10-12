@@ -50,7 +50,7 @@ const Nav = () => (
     <div className="mx-auto flex h-14 max-w-6xl items-center justify-between">
       <a href="#" aria-label="OneAura"><img src={logoImg} alt="OneAura" className="h-7 w-auto" /></a>
       <nav className="hidden gap-6 text-sm md:flex"><a href="#como">Cómo funciona</a><a href="#calculadora">Calculadora</a><a href="#faq">Preguntas</a></nav>
-      <div className="flex items-center gap-4"><a href={SCHOOLS_URL} className="text-xs text-neutral transition hover:text-primary sm:text-sm">Acceso escuelas</a><Reservar>Reservar demo</Reservar></div>
+      <div className="flex items-center gap-4"><a href={SCHOOLS_URL} className="text-sm text-neutral transition hover:text-primary">Acceso escuelas</a><Reservar>Reservar demo</Reservar></div>
     </div>
   </header>
 )
