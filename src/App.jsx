@@ -32,12 +32,12 @@ const WhatsAppFloat = () => {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chatea por WhatsApp"
-      className={`fixed right-5 z-[2147483647] flex h-14 items-center gap-2.5 rounded-full bg-[#25D366] pl-4 pr-5 font-semibold text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl ${raised ? 'bottom-28' : 'bottom-5'}`}
+      className={`fixed right-5 z-[2147483647] flex h-11 items-center gap-2 rounded-full bg-[#25D366] pl-3 pr-4 font-semibold text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl ${raised ? 'bottom-28' : 'bottom-5'}`}
     >
-      <svg viewBox="0 0 32 32" aria-hidden="true" className="size-[30px] shrink-0 fill-white">
+      <svg viewBox="0 0 32 32" aria-hidden="true" className="size-6 shrink-0 fill-white">
         <path d="M16 3C9 3 3.5 8.5 3.5 15.4c0 2.4.7 4.7 1.9 6.7L3.3 29l7.1-2c1.9 1 4 1.6 6.1 1.6h.1c6.9 0 12.5-5.5 12.5-12.4C29.1 8.5 23.4 3 16 3zm7.3 17.7c-.3.9-1.8 1.7-2.5 1.8-.6.1-1.4.1-2.3-.1-.5-.2-1.2-.4-2.1-.8-3.7-1.6-6.1-5.3-6.3-5.6-.2-.2-1.5-2-1.5-3.8 0-1.8.9-2.7 1.3-3.1.3-.4.7-.4 1-.4h.7c.2 0 .5 0 .8.6.3.7 1 2.4 1.1 2.5.1.2.1.4 0 .6-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.9 1.8.4.2.6.1.8-.1.2-.2.9-1.1 1.2-1.4.2-.4.5-.3.8-.2.3.1 2 .9 2.3 1.1.3.2.5.2.6.4.1.1.1.8-.2 1.7z" />
       </svg>
-      <span className="whitespace-nowrap text-sm">¿Dudas? Escríbenos</span>
+      <span className="whitespace-nowrap text-xs">¿Dudas? Escríbenos</span>
     </a>
   )
 }
