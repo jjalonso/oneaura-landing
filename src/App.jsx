@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Accordion, Button, Card, Chip } from '@heroui/react'
 import Calculator from './Calculator'
-import { BOOKING_URL, SCHOOLS_URL, TERMS_URL, WHATSAPP_URL, COMMISSION, PAYMENT_FEE, LOGOS, faq } from './content'
+import { BOOKING_URL, SCHOOLS_URL, TERMS_URL, WHATSAPP_URL, CONTACT_EMAIL, COMMISSION, PAYMENT_FEE, LOGOS, faq } from './content'
 const fmt = n => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 import heroImg from './assets/hero.webp'
 import availabilityImg from './assets/availability.webp'
@@ -247,7 +247,8 @@ const Reserva = () => {
   return (
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
-      <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
+      <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
+      <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
       <div className="mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
         {BOOKING_URL
           ? <div ref={ref} className="transition-[height] duration-1000 ease-out" style={{ minWidth: 320, height: 700 }} />
@@ -262,7 +263,7 @@ const Footer = () => (
   <footer id="site-footer" className="px-5 pb-10 pt-12 text-xs text-muted">
     <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3">
       <span>© 2026 OneAura</span>
-      <nav className="flex flex-wrap gap-4"><a href={SCHOOLS_URL}>Acceso escuelas</a><a href={TERMS_URL}>Privacy &amp; Terms</a><a href="mailto:hola@oneaura.app">Contacto</a></nav>
+      <nav className="flex flex-wrap gap-4"><a href={SCHOOLS_URL}>Acceso escuelas</a><a href={TERMS_URL}>Privacy &amp; Terms</a><a href={`mailto:${CONTACT_EMAIL}`}>Contacto</a></nav>
     </div>
   </footer>
 )

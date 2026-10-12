@@ -2,6 +2,7 @@
 export const SCHOOLS_URL = 'https://admin.oneaura.app' // enlace de acceso de las escuelas (login)
 export const BOOKING_URL = 'https://calendly.com/hello-oneaura/30min' // enlace de Calendly (o Cal.com) para el calendario de reservas
 export const TERMS_URL = '/privacy' // public/privacy.html
+export const CONTACT_EMAIL = 'hello@oneaura.app'
 export const WHATSAPP_URL = 'https://wa.me/447474464848?text=%5BOneAura.app%5D%20Hola' // botón flotante de WhatsApp
 import ines from './assets/logos/ines.webp'
 import biel from './assets/logos/biel.webp'
