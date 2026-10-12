@@ -218,7 +218,7 @@ const Reserva = () => {
   const ref = useRef(null)
   useEffect(() => {
     if (!BOOKING_URL || !ref.current) return
-    const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=825355`
+    const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=ffffff&text_color=645d5e`
     // No .calendly-inline-widget class here on purpose: that class makes
     // widget.js's own auto-scan try to init this div too, racing our manual
     // call below and leaving it blank. So Calendly's CSS never sizes the
@@ -248,7 +248,7 @@ const Reserva = () => {
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-6 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
-      <div className="mx-auto max-w-2xl text-foreground">
+      <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl text-foreground">
         {BOOKING_URL
           ? <div ref={ref} style={{ minWidth: 320, height: 700 }} />
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
