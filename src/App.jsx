@@ -124,6 +124,11 @@ const Solucion = () => (
   </S>
 )
 
+const COMO_STEPS = [
+  ['Marcan su disponibilidad.', 'Eligen sus franjas horarias disponibles, de lunes a domingo.'],
+  ['Nuestra IA los empareja.', 'Nuestra IA empareja estudiantes y los notifica para una sesión programada con entre 2 y 7 días de antelación.'],
+  ['Videollamadas integradas.', 'Les avisamos cuando llega la hora y se unen a una videollamada de 60 minutos. Al terminar, pueden valorar a su compañero.'],
+]
 const COMO_SLIDES = [
   { src: availabilityImg, alt: 'Panel de disponibilidad semanal del alumno, con sus franjas horarias', rotate: '-rotate-2' },
   { src: dashboardImg, alt: 'Panel de la escuela con las próximas sesiones y el historial de un alumno', rotate: 'rotate-2' },
@@ -144,16 +149,22 @@ const Como = () => {
         <p>Prácticas continuas con otros estudiantes de la red OneAura. Sin esfuerzo, nuestro sistema los mantiene practicando en rutina.</p>
       </div>
       <ol className="grid items-stretch gap-6 md:grid-cols-3">
-        {[['Marcan su disponibilidad.', 'Eligen sus franjas horarias disponibles, de lunes a domingo.'], ['Nuestra IA los empareja.', 'Nuestra IA empareja estudiantes y los notifica para una sesión programada con entre 2 y 7 días de antelación.'], ['Videollamadas integradas.', 'Les avisamos cuando llega la hora y se unen a una videollamada de 60 minutos. Al terminar, pueden valorar a su compañero.']].map(([t, d], i) => (
-          <li key={t} className="flex"><Tile className="w-full"><span className="mb-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span><h3 className="mb-1.5 text-sm font-semibold">{t}</h3><p className="text-sm">{d}</p></Tile></li>
+        {COMO_STEPS.map(([t, d], i) => (
+          <li key={t} className="flex flex-col">
+            <Tile className="w-full"><span className="mb-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span><h3 className="mb-1.5 text-sm font-semibold">{t}</h3><p className="text-sm">{d}</p></Tile>
+            {/* En movil cada paso lleva su imagen justo debajo, sin carrusel ni
+                animacion: en una columna estrecha es mas claro ver cada captura
+                pegada a lo que explica. En md+ se ocultan y manda el carrusel. */}
+            <img src={COMO_SLIDES[i].src} alt={COMO_SLIDES[i].alt} className="mt-4 w-full md:hidden" />
+          </li>
         ))}
       </ol>
-      <div className="mt-6 grid grid-cols-3 gap-6" aria-hidden="true">
+      <div className="mt-6 hidden grid-cols-3 gap-6 md:grid" aria-hidden="true">
         {COMO_SLIDES.map((_, i) => (
           <div key={i} className={`h-1.5 rounded-full transition-colors duration-700 ${i === slide ? 'bg-primary' : 'bg-neutral-surface'}`} />
         ))}
       </div>
-      <div className="relative mx-auto mt-8 h-[28rem] w-full max-w-2xl overflow-hidden md:h-[34rem]">
+      <div className="relative mx-auto mt-8 hidden h-[28rem] w-full max-w-2xl overflow-hidden md:block md:h-[34rem]">
         {COMO_SLIDES.map((s, i) => (
           <img key={s.src} src={s.src} alt={s.alt} className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ${s.rotate} ${i === slide ? 'opacity-100' : 'opacity-0'}`} />
         ))}
