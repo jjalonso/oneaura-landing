@@ -240,12 +240,33 @@ const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
 // one-shot scan before React had rendered the div, and find nothing.
 const Reserva = () => {
   const ref = useRef(null)
+  const [ready, setReady] = useState(false)
   useEffect(() => {
-    if (!BOOKING_URL || document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)) return
-    const script = document.createElement('script')
-    script.src = CALENDLY_SCRIPT
-    script.async = true
-    document.body.appendChild(script)
+    if (!BOOKING_URL) return
+    // Calendly posts its page height from the iframe. The first ones while it
+    // boots are tiny (26px, then 2px — measured); the first real one comes
+    // with the painted calendar. Registered before widget.js loads, so this
+    // runs before widget.js applies that same height to the div.
+    // On wide screens the first real height is its narrow layout's (602px),
+    // then the right one (700px) 44ms later — measured. So it's ready once
+    // the heights stop changing, not on the first big one, or the box would
+    // blink to 602 as the reserved height let go.
+    let settle
+    const onMessage = e => {
+      if (e.origin !== 'https://calendly.com' || e.data?.event !== 'calendly.page_height') return
+      if (parseInt(e.data.payload?.height, 10) < 200) return
+      clearTimeout(settle)
+      settle = setTimeout(() => setReady(true), 200)
+    }
+    window.addEventListener('message', onMessage)
+    const failsafe = setTimeout(() => setReady(true), 10000)
+    if (!document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)) {
+      const script = document.createElement('script')
+      script.src = CALENDLY_SCRIPT
+      script.async = true
+      document.body.appendChild(script)
+    }
+    return () => { window.removeEventListener('message', onMessage); clearTimeout(failsafe); clearTimeout(settle) }
   }, [])
   const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=ffffff&text_color=645d5e`
   return (
@@ -253,13 +274,12 @@ const Reserva = () => {
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
+      <div className={`calendly-wrap relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground ${ready ? 'is-ready' : ''}`}>
         {BOOKING_URL
           ? <>
-              {/* Sits behind and stays there: no state, no listeners. Calendly's
-                  iframe is transparent until its page paints, so the skeleton
-                  shows through and is then simply covered by it. Nothing to
-                  time, nothing to fade, nothing to unmount. */}
+              {/* Behind the embed, filling the same box. Visible only for the
+                  moment before widget.js runs; after that the embed's white
+                  square and then the calendar cover it (see index.css). */}
               <div className="skeleton--shimmer absolute inset-0 flex flex-col gap-4 bg-white p-8">
                 <Skeleton animationType="none" className="h-5 w-2/5 rounded-lg" />
                 <Skeleton animationType="none" className="h-3 w-3/5 rounded-lg" />
@@ -267,7 +287,7 @@ const Reserva = () => {
                   {Array.from({ length: 35 }).map((_, i) => <Skeleton key={i} animationType="none" className="rounded-lg" />)}
                 </div>
               </div>
-              <div ref={ref} className="calendly-inline-widget relative" data-url={url} data-resize="true" style={{ minWidth: 320, height: 700 }} />
+              <div ref={ref} className="calendly-inline-widget relative" data-url={url} data-resize="true" style={{ minWidth: 320 }} />
             </>
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
