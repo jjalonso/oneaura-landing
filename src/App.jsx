@@ -252,8 +252,16 @@ const Reserva = () => {
     // itself (the only event widget.js itself sends), so the calendar really is
     // there by then. The timeout only stops a message that never arrives from
     // leaving the skeleton up for good.
+    // Calendly writes the real height straight onto this container
+    // (widget.js: `this.parent.style.height = e`) when its page reports
+    // calendly.page_height. Reveal just after that lands, so the skeleton is
+    // still covering while the box jumps from the reserved 700px to its real
+    // size — that jump is what looked like the calendar closing and reopening.
+    let reveal
     const onMessage = e => {
-      if (e.origin === 'https://calendly.com' && e.data?.event === 'calendly.page_height') setLoaded(true)
+      if (e.origin !== 'https://calendly.com' || e.data?.event !== 'calendly.page_height') return
+      clearTimeout(reveal)
+      reveal = setTimeout(() => setLoaded(true), 400)
     }
     window.addEventListener('message', onMessage)
     const failsafe = setTimeout(() => setLoaded(true), 10000)
@@ -276,6 +284,7 @@ const Reserva = () => {
       observer.disconnect()
       window.removeEventListener('message', onMessage)
       clearTimeout(failsafe)
+      clearTimeout(reveal)
     }
   }, [])
   return (
@@ -286,7 +295,11 @@ const Reserva = () => {
       <div className="relative mx-auto max-w-2xl overflow-hidden rounded-4xl bg-white text-foreground">
         {BOOKING_URL
           ? <>
-              <div ref={ref} className="transition-[height] duration-1000 ease-out" style={{ minWidth: 320, height: 700 }} />
+              {/* The transition is only switched on once loaded: it's there to
+                  ease the height changes BETWEEN steps of the booking flow, not
+                  the first jump off the reserved 700px, which should be instant
+                  and hidden under the skeleton. */}
+              <div ref={ref} className={loaded ? 'transition-[height] duration-700 ease-out' : undefined} style={{ minWidth: 320, height: 700 }} />
               {/* The space is already reserved by the 700px above; this just
                   fills it so the wait isn't a blank white box. One shimmer
                   sweeps the whole thing (skeleton--shimmer on the parent +
