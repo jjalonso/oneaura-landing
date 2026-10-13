@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Accordion, Button, Card, Chip } from '@heroui/react'
+import { Accordion, Button, Card, Chip, Skeleton } from '@heroui/react'
 import Calculator from './Calculator'
 import { BOOKING_URL, SCHOOLS_URL, TERMS_URL, WHATSAPP_URL, CONTACT_EMAIL, COMMISSION, PAYMENT_FEE, LOGOS, faq } from './content'
 const fmt = n => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -234,6 +234,7 @@ const Faq = () => (
 const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
 const Reserva = () => {
   const ref = useRef(null)
+  const [loaded, setLoaded] = useState(false)
   useEffect(() => {
     if (!BOOKING_URL || !ref.current) return
     const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=ffffff&text_color=645d5e`
@@ -243,7 +244,11 @@ const Reserva = () => {
     // iframe either — do that by hand as soon as it appears.
     const sizeIframe = () => {
       const iframe = ref.current?.querySelector('iframe')
-      if (iframe) Object.assign(iframe.style, { width: '100%', height: '100%', border: '0' })
+      if (!iframe) return
+      Object.assign(iframe.style, { width: '100%', height: '100%', border: '0' })
+      // The iframe element exists well before Calendly has painted anything, so
+      // the skeleton waits for its load event rather than for the node.
+      iframe.addEventListener('load', () => setLoaded(true), { once: true })
     }
     const observer = new MutationObserver(sizeIframe)
     observer.observe(ref.current, { childList: true })
@@ -267,9 +272,24 @@ const Reserva = () => {
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className="mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
+      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-4xl bg-white text-foreground">
         {BOOKING_URL
-          ? <div ref={ref} className="transition-[height] duration-1000 ease-out" style={{ minWidth: 320, height: 700 }} />
+          ? <>
+              <div ref={ref} className="transition-[height] duration-1000 ease-out" style={{ minWidth: 320, height: 700 }} />
+              {/* The space is already reserved by the 700px above; this just
+                  fills it so the wait isn't a blank white box. One shimmer
+                  sweeps the whole thing (skeleton--shimmer on the parent +
+                  animationType="none" on each bone), per HeroUI's docs. */}
+              {!loaded && (
+                <div className="skeleton--shimmer absolute inset-0 flex flex-col gap-4 bg-white p-8">
+                  <Skeleton animationType="none" className="h-5 w-2/5 rounded-lg" />
+                  <Skeleton animationType="none" className="h-3 w-3/5 rounded-lg" />
+                  <div className="mt-4 grid flex-1 grid-cols-7 gap-2.5">
+                    {Array.from({ length: 35 }).map((_, i) => <Skeleton key={i} animationType="none" className="rounded-lg" />)}
+                  </div>
+                </div>
+              )}
+            </>
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
       {BOOKING_URL && <p className="mt-5 text-sm opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
