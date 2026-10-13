@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Accordion, Button, Card, Chip } from '@heroui/react'
+import { Accordion, Button, Card, Chip, Skeleton } from '@heroui/react'
 import Calculator from './Calculator'
 import { BOOKING_URL, SCHOOLS_URL, TERMS_URL, WHATSAPP_URL, CONTACT_EMAIL, COMMISSION, PAYMENT_FEE, LOGOS, faq } from './content'
 const fmt = n => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -253,9 +253,22 @@ const Reserva = () => {
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className="mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
+      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
         {BOOKING_URL
-          ? <div ref={ref} className="calendly-inline-widget" data-url={url} data-resize="true" style={{ minWidth: 320, height: 700 }} />
+          ? <>
+              {/* Sits behind and stays there: no state, no listeners. Calendly's
+                  iframe is transparent until its page paints, so the skeleton
+                  shows through and is then simply covered by it. Nothing to
+                  time, nothing to fade, nothing to unmount. */}
+              <div className="skeleton--shimmer absolute inset-0 flex flex-col gap-4 bg-white p-8">
+                <Skeleton animationType="none" className="h-5 w-2/5 rounded-lg" />
+                <Skeleton animationType="none" className="h-3 w-3/5 rounded-lg" />
+                <div className="mt-4 grid flex-1 grid-cols-7 gap-2.5">
+                  {Array.from({ length: 35 }).map((_, i) => <Skeleton key={i} animationType="none" className="rounded-lg" />)}
+                </div>
+              </div>
+              <div ref={ref} className="calendly-inline-widget relative" data-url={url} data-resize="true" style={{ minWidth: 320, height: 700 }} />
+            </>
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
       {BOOKING_URL && <p className="mt-5 text-sm opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
