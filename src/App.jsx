@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Accordion, Button, Card, Chip, Skeleton } from '@heroui/react'
+import { Accordion, Button, Card, Chip } from '@heroui/react'
 import Calculator from './Calculator'
 import { BOOKING_URL, SCHOOLS_URL, TERMS_URL, WHATSAPP_URL, CONTACT_EMAIL, COMMISSION, PAYMENT_FEE, LOGOS, faq } from './content'
 const fmt = n => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -232,88 +232,30 @@ const Faq = () => (
 )
 
 const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
+// Calendly's own inline embed, nothing else: a div with their class, their
+// data-url and data-resize, and their script. widget.js finds the div itself
+// and takes over — it creates the iframe, sizes it, and writes the height onto
+// this div on every step (that growing is theirs, not ours). The script is
+// injected after mount on purpose: loaded from index.html it would run its
+// one-shot scan before React had rendered the div, and find nothing.
 const Reserva = () => {
   const ref = useRef(null)
-  const [loaded, setLoaded] = useState(false)
   useEffect(() => {
-    if (!BOOKING_URL || !ref.current) return
-    const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=ffffff&text_color=645d5e`
-    // No .calendly-inline-widget class here on purpose: that class makes
-    // widget.js's own auto-scan try to init this div too, racing our manual
-    // call below and leaving it blank. So Calendly's CSS never sizes the
-    // iframe either — do that by hand as soon as it appears.
-    const sizeIframe = () => {
-      const iframe = ref.current?.querySelector('iframe')
-      if (iframe) Object.assign(iframe.style, { width: '100%', height: '100%', border: '0' })
-    }
-    // Clearing the skeleton on the iframe's load event was too early: the frame
-    // loads well before Calendly paints, so it went skeleton -> blank -> calendar.
-    // calendly.page_height is posted once their page has rendered and measured
-    // itself (the only event widget.js itself sends), so the calendar really is
-    // there by then. The timeout only stops a message that never arrives from
-    // leaving the skeleton up for good.
-    // Calendly writes the real height straight onto this container
-    // (widget.js: `this.parent.style.height = e`) when its page reports
-    // calendly.page_height. Reveal just after that lands, so the skeleton is
-    // still covering while the box jumps from the reserved 700px to its real
-    // size — that jump is what looked like the calendar closing and reopening.
-    let reveal
-    const onMessage = e => {
-      if (e.origin !== 'https://calendly.com' || e.data?.event !== 'calendly.page_height') return
-      clearTimeout(reveal)
-      reveal = setTimeout(() => setLoaded(true), 400)
-    }
-    window.addEventListener('message', onMessage)
-    const failsafe = setTimeout(() => setLoaded(true), 10000)
-    const observer = new MutationObserver(sizeIframe)
-    observer.observe(ref.current, { childList: true })
-    const init = () => { window.Calendly?.initInlineWidget({ url, parentElement: ref.current, resize: true }); sizeIframe() }
-    if (window.Calendly) { init() } else {
-      const existing = document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)
-      if (existing) {
-        existing.addEventListener('load', init)
-      } else {
-        const script = document.createElement('script')
-        script.src = CALENDLY_SCRIPT
-        script.async = true
-        script.onload = init
-        document.body.appendChild(script)
-      }
-    }
-    return () => {
-      observer.disconnect()
-      window.removeEventListener('message', onMessage)
-      clearTimeout(failsafe)
-      clearTimeout(reveal)
-    }
+    if (!BOOKING_URL || document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)) return
+    const script = document.createElement('script')
+    script.src = CALENDLY_SCRIPT
+    script.async = true
+    document.body.appendChild(script)
   }, [])
+  const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=ffffff&text_color=645d5e`
   return (
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
+      <div className="mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
         {BOOKING_URL
-          ? <>
-              {/* The transition is only switched on once loaded: it's there to
-                  ease the height changes BETWEEN steps of the booking flow, not
-                  the first jump off the reserved 700px, which should be instant
-                  and hidden under the skeleton. */}
-              <div ref={ref} className={loaded ? 'transition-[height] duration-700 ease-out' : undefined} style={{ minWidth: 320, height: 700 }} />
-              {/* The space is already reserved by the 700px above; this just
-                  fills it so the wait isn't a blank white box. One shimmer
-                  sweeps the whole thing (skeleton--shimmer on the parent +
-                  animationType="none" on each bone), per HeroUI's docs. */}
-              {/* Stays mounted and fades out over the calendar underneath, so
-                  nothing closes and reopens — it dissolves into it. */}
-              <div className={`skeleton--shimmer absolute inset-0 flex flex-col gap-4 bg-white p-8 transition-opacity duration-500 ${loaded ? 'pointer-events-none opacity-0' : 'opacity-100'}`}>
-                <Skeleton animationType="none" className="h-5 w-2/5 rounded-lg" />
-                <Skeleton animationType="none" className="h-3 w-3/5 rounded-lg" />
-                <div className="mt-4 grid flex-1 grid-cols-7 gap-2.5">
-                  {Array.from({ length: 35 }).map((_, i) => <Skeleton key={i} animationType="none" className="rounded-lg" />)}
-                </div>
-              </div>
-            </>
+          ? <div ref={ref} className="calendly-inline-widget" data-url={url} data-resize="true" style={{ minWidth: 320, height: 700 }} />
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
       {BOOKING_URL && <p className="mt-5 text-sm opacity-90">¿No ves el calendario? <a href={BOOKING_URL} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">Ábrelo en otra pestaña</a>.</p>}
