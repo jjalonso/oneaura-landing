@@ -244,12 +244,19 @@ const Reserva = () => {
     // iframe either — do that by hand as soon as it appears.
     const sizeIframe = () => {
       const iframe = ref.current?.querySelector('iframe')
-      if (!iframe) return
-      Object.assign(iframe.style, { width: '100%', height: '100%', border: '0' })
-      // The iframe element exists well before Calendly has painted anything, so
-      // the skeleton waits for its load event rather than for the node.
-      iframe.addEventListener('load', () => setLoaded(true), { once: true })
+      if (iframe) Object.assign(iframe.style, { width: '100%', height: '100%', border: '0' })
     }
+    // Clearing the skeleton on the iframe's load event was too early: the frame
+    // loads well before Calendly paints, so it went skeleton -> blank -> calendar.
+    // calendly.page_height is posted once their page has rendered and measured
+    // itself (the only event widget.js itself sends), so the calendar really is
+    // there by then. The timeout only stops a message that never arrives from
+    // leaving the skeleton up for good.
+    const onMessage = e => {
+      if (e.origin === 'https://calendly.com' && e.data?.event === 'calendly.page_height') setLoaded(true)
+    }
+    window.addEventListener('message', onMessage)
+    const failsafe = setTimeout(() => setLoaded(true), 10000)
     const observer = new MutationObserver(sizeIframe)
     observer.observe(ref.current, { childList: true })
     const init = () => { window.Calendly?.initInlineWidget({ url, parentElement: ref.current, resize: true }); sizeIframe() }
@@ -265,7 +272,11 @@ const Reserva = () => {
         document.body.appendChild(script)
       }
     }
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('message', onMessage)
+      clearTimeout(failsafe)
+    }
   }, [])
   return (
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
@@ -280,15 +291,15 @@ const Reserva = () => {
                   fills it so the wait isn't a blank white box. One shimmer
                   sweeps the whole thing (skeleton--shimmer on the parent +
                   animationType="none" on each bone), per HeroUI's docs. */}
-              {!loaded && (
-                <div className="skeleton--shimmer absolute inset-0 flex flex-col gap-4 bg-white p-8">
-                  <Skeleton animationType="none" className="h-5 w-2/5 rounded-lg" />
-                  <Skeleton animationType="none" className="h-3 w-3/5 rounded-lg" />
-                  <div className="mt-4 grid flex-1 grid-cols-7 gap-2.5">
-                    {Array.from({ length: 35 }).map((_, i) => <Skeleton key={i} animationType="none" className="rounded-lg" />)}
-                  </div>
+              {/* Stays mounted and fades out over the calendar underneath, so
+                  nothing closes and reopens — it dissolves into it. */}
+              <div className={`skeleton--shimmer absolute inset-0 flex flex-col gap-4 bg-white p-8 transition-opacity duration-500 ${loaded ? 'pointer-events-none opacity-0' : 'opacity-100'}`}>
+                <Skeleton animationType="none" className="h-5 w-2/5 rounded-lg" />
+                <Skeleton animationType="none" className="h-3 w-3/5 rounded-lg" />
+                <div className="mt-4 grid flex-1 grid-cols-7 gap-2.5">
+                  {Array.from({ length: 35 }).map((_, i) => <Skeleton key={i} animationType="none" className="rounded-lg" />)}
                 </div>
-              )}
+              </div>
             </>
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
