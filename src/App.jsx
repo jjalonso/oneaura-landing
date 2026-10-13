@@ -292,7 +292,7 @@ const Reserva = () => {
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-4xl bg-white text-foreground">
+      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground">
         {BOOKING_URL
           ? <>
               {/* The transition is only switched on once loaded: it's there to
