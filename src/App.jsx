@@ -274,13 +274,13 @@ const Reserva = () => {
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className={`calendly-wrap relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground ${ready ? 'is-ready' : ''}`}>
+      <div className={`calendly-wrap relative mx-auto max-w-2xl text-foreground ${ready ? 'is-ready' : ''}`}>
         {BOOKING_URL
           ? <>
               {/* Behind the embed, filling the same box. Visible only for the
-                  moment before widget.js runs; after that the embed's white
+                  moment before widget.js runs; after that the embed's
                   square and then the calendar cover it (see index.css). */}
-              <div className="skeleton--shimmer absolute inset-0 flex flex-col gap-4 bg-white p-8">
+              <div className="skeleton--shimmer absolute inset-0 isolate flex flex-col gap-4 overflow-hidden bg-primary p-8">
                 <Skeleton animationType="none" className="h-5 w-2/5 rounded-lg" />
                 <Skeleton animationType="none" className="h-3 w-3/5 rounded-lg" />
                 <div className="mt-4 grid flex-1 grid-cols-7 gap-2.5">

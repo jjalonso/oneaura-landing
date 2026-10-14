@@ -199,7 +199,7 @@
 /* Calendly inline embed. Every phase sits at the calendar's own height, so
    nothing jumps and nothing is left over once it's painted:
    1. widget.js not run yet, div empty -> transparent: the skeleton behind shows.
-   2. widget.js has added its spinner + iframe -> a white square, spinner
+   2. widget.js has added its spinner + iframe -> a primary-coloured square, spinner
       centred by widget.css. The iframe stays hidden: while booting it reports
       26px then 2px and draws its own loader pinned to the top.
    3. .is-ready (first real calendly.page_height) -> iframe shown, the reserved
@@ -209,7 +209,7 @@
    Ready-state lives on the wrapper, not this div, because widget.js appends its
    own classes to this div's className and a React re-render would wipe them. */
 .calendly-inline-widget { isolation: isolate; }
-.calendly-inline-widget:not(:empty) { background: #fff; }
+.calendly-inline-widget:not(:empty) { background: var(--primary); }
 .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 602px; }
 @media (min-width: 690px) { .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 700px; } }
 .calendly-wrap:not(.is-ready) .calendly-inline-widget iframe { opacity: 0; }
