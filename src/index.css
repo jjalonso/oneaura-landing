@@ -215,6 +215,15 @@
 .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 602px; }
 @media (min-width: 690px) { .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 700px; } }
 .calendly-wrap:not(.is-ready) .calendly-inline-widget iframe { opacity: 0; }
+/* Wide layout only (from 690px): Calendly draws its own card inside the
+   iframe — inset 66px top, 17px sides, 32px bottom (measured, and the same on
+   every step: calendar, day, time, form), with its own 8px corners, 1px border
+   and shadow, all out of our CSS's reach. Clip the iframe to that card, 1px in
+   so its border and shadow go, with our surfaces' radius (rounded-4xl). In the
+   narrow layout the card fills the iframe and the wrapper's rounding does it. */
+@media (min-width: 690px) {
+  .calendly-inline-widget iframe { clip-path: inset(67px 18px 33px 18px round 2rem); }
+}
 /* The calendar skeleton (App.jsx) stands in for Calendly's spinner. */
 .calendly-wrap .calendly-spinner { display: none; }
 /* Once ready, Calendly resizes this div as you move through the booking flow

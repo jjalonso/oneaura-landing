@@ -274,7 +274,7 @@ const Reserva = () => {
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className={`calendly-wrap relative mx-auto max-w-2xl text-foreground ${ready ? 'is-ready' : ''}`}>
+      <div className={`calendly-wrap relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground ${ready ? 'is-ready' : ''}`}>
         {BOOKING_URL
           ? <>
               {/* In place of Calendly's spinner while it loads: a calendar
@@ -284,7 +284,7 @@ const Reserva = () => {
                   the moment the calendar is ready, in the same render that
                   shows the (opaque) iframe over it, so there's no gap. */}
               {!ready && (
-                <div aria-hidden="true" className="absolute inset-0 px-6 pt-10">
+                <div aria-hidden="true" className="absolute inset-0 px-6 pt-10 min-[690px]:pt-[100px]">
                   <Skeleton animationType="pulse" className="mx-auto h-5 w-40 rounded-full bg-white/15" />
                   <Skeleton animationType="pulse" className="mx-auto mt-11 h-4 w-40 rounded-full bg-white/15" />
                   <div className="mx-auto mt-11 grid max-w-sm grid-cols-7 gap-3">
