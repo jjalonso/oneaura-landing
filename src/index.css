@@ -196,20 +196,22 @@
   .slider  { grid-template-columns: minmax(0, 1fr) auto; }
 }
 
-/* Calendly inline embed. Every phase sits at the calendar's own height, so
-   nothing jumps and nothing is left over once it's painted:
-   1. widget.js not run yet, div empty -> transparent: the skeleton behind shows.
-   2. widget.js has added its spinner + iframe -> a primary-coloured square, spinner
-      centred by widget.css. The iframe stays hidden: while booting it reports
-      26px then 2px and draws its own loader pinned to the top.
-   3. .is-ready (first real calendly.page_height) -> iframe shown, the reserved
-      min-height dropped, height entirely Calendly's from here on.
-   The reserved height is what Calendly measures itself at: 602px in its narrow
-   layout, 700px from a 690px viewport (where its iframe reaches ~650px wide).
+/* Calendly inline embed. The box sits at the calendar's own height the whole
+   time, so nothing jumps and nothing is left over once it's painted:
+   - while loading: Calendly's spinner, centred by widget.css, on the section's
+     own colour. The iframe stays at opacity 0 — while booting it reports 26px
+     then 2px and draws its own loader pinned to the top. (Not visibility:
+     hidden: Chrome stops painting hidden cross-origin frames and Calendly
+     never finishes booting.)
+   - .is-ready (heights settled): iframe shown, reserved height dropped,
+     Calendly sizes it from here on.
+   Reserved height = what Calendly measures itself at: 602px in its narrow
+   layout, 700px from a 690px viewport (its iframe then ~650px wide).
+   isolation: widget.css gives the spinner z-index:-1; without its own stacking
+   context it sinks behind the section's background and never shows.
    Ready-state lives on the wrapper, not this div, because widget.js appends its
    own classes to this div's className and a React re-render would wipe them. */
 .calendly-inline-widget { isolation: isolate; }
-.calendly-inline-widget:not(:empty) { background: var(--primary); }
 .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 602px; }
 @media (min-width: 690px) { .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 700px; } }
 .calendly-wrap:not(.is-ready) .calendly-inline-widget iframe { opacity: 0; }
