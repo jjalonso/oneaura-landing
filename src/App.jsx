@@ -242,7 +242,7 @@ const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
 // moves at the same speed, so the duration comes from the distance: a big
 // jump doesn't race and a small one doesn't crawl. Clamped so a tiny change
 // isn't a flicker and a huge one isn't a wait.
-const RESIZE_SPEED = 300 // px per second
+const RESIZE_SPEED = 400 // px per second
 const resizeMs = distance => Math.round(Math.min(2000, Math.max(600, distance / RESIZE_SPEED * 1000)))
 
 // Runs before widget.js sets the new height, so the box's height is still the
