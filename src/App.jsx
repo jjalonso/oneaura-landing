@@ -7,6 +7,8 @@ import heroImg from './assets/hero.webp'
 import availabilityImg from './assets/availability.webp'
 import dashboardImg from './assets/dashboard.webp'
 import videollamadaImg from './assets/videollamada.webp'
+import availabilityMobileImg from './assets/availability-mobile.webp'
+import sessionsMobileImg from './assets/sessions-mobile.webp'
 import logoImg from './assets/oneaura.webp'
 import chatImg from './assets/chat.webp'
 
@@ -134,6 +136,13 @@ const COMO_STEPS = [
   ['Nuestra IA los empareja.', 'Nuestra IA empareja estudiantes y los notifica para una sesión programada con entre 2 y 7 días de antelación.'],
   ['Videollamadas integradas.', 'Les avisamos cuando llega la hora y se unen a una videollamada de 60 minutos. Al terminar, pueden valorar a su compañero.'],
 ]
+// En movil, bajo cada paso, una captura recortada a lo que explica (se lee a
+// ese ancho); la del video es la misma que en escritorio.
+const COMO_MOBILE = [
+  { src: availabilityMobileImg, alt: 'Disponibilidad semanal del alumno: zona horaria y franjas por día', cls: 'rounded-4xl shadow-sanctuary' },
+  { src: sessionsMobileImg, alt: 'Próximas sesiones del alumno y su historial', cls: 'rounded-4xl shadow-sanctuary' },
+  { src: videollamadaImg, alt: 'Videollamada de práctica entre dos alumnas', cls: '' },
+]
 const COMO_SLIDES = [
   { src: availabilityImg, alt: 'Panel de disponibilidad semanal del alumno, con sus franjas horarias', rotate: '-rotate-2' },
   { src: dashboardImg, alt: 'Panel de la escuela con las próximas sesiones y el historial de un alumno', rotate: 'rotate-2' },
@@ -160,7 +169,7 @@ const Como = () => {
             {/* En movil cada paso lleva su imagen justo debajo, sin carrusel ni
                 animacion: en una columna estrecha es mas claro ver cada captura
                 pegada a lo que explica. En md+ se ocultan y manda el carrusel. */}
-            <img src={COMO_SLIDES[i].src} alt={COMO_SLIDES[i].alt} className="mt-4 w-full md:hidden" />
+            <img src={COMO_MOBILE[i].src} alt={COMO_MOBILE[i].alt} className={`mt-4 w-full md:hidden ${COMO_MOBILE[i].cls}`} />
           </li>
         ))}
       </ol>
