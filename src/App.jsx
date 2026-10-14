@@ -278,15 +278,17 @@ const Reserva = () => {
         {BOOKING_URL
           ? <>
               {/* In place of Calendly's spinner while it loads: a calendar
-                  outline — the month bar, then rows of day cells — in the
+                  outline — title bar, month bar, five rows of day cells,
+                  placed roughly where Calendly draws them — in the
                   reserved box, under the still-transparent embed. Unmounted
                   the moment the calendar is ready, in the same render that
                   shows the (opaque) iframe over it, so there's no gap. */}
               {!ready && (
-                <div aria-hidden="true" className="absolute inset-0 px-6 pt-14">
-                  <Skeleton animationType="pulse" className="mx-auto h-4 w-32 rounded-full bg-white/15" />
-                  <div className="mx-auto mt-10 grid max-w-sm grid-cols-7 gap-3">
-                    {Array.from({ length: 28 }).map((_, i) => <Skeleton key={i} animationType="pulse" className="aspect-square rounded-full bg-white/15" />)}
+                <div aria-hidden="true" className="absolute inset-0 px-6 pt-10">
+                  <Skeleton animationType="pulse" className="mx-auto h-5 w-40 rounded-full bg-white/15" />
+                  <Skeleton animationType="pulse" className="mx-auto mt-11 h-4 w-40 rounded-full bg-white/15" />
+                  <div className="mx-auto mt-11 grid max-w-sm grid-cols-7 gap-3">
+                    {Array.from({ length: 35 }).map((_, i) => <Skeleton key={i} animationType="pulse" className="aspect-square rounded-full bg-white/15" />)}
                   </div>
                 </div>
               )}
