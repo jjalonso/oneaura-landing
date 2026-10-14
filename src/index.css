@@ -221,8 +221,14 @@
    and shadow, all out of our CSS's reach. Clip the iframe to that card, 1px in
    so its border and shadow go, with our surfaces' radius (rounded-4xl). In the
    narrow layout the card fills the iframe, so the clip is just the rounding —
-   there so App.jsx's followShrink can move its bottom edge on both layouts. */
-.calendly-inline-widget iframe { clip-path: inset(0 0 0 0 round 2rem); }
+   kept the same shape on both layouts.
+   White behind the iframe: when the content gets shorter, Calendly redraws its
+   card at the new height at once and leaves the rest of the iframe
+   transparent, while the box is still easing down. Painted white, that area
+   reads as the same card, so it shrinks smoothly with the box and keeps our
+   rounded bottom — instead of the card snapping to its new size with its own
+   square corners. Same white as the embed's background_color. */
+.calendly-inline-widget iframe { clip-path: inset(0 0 0 0 round 2rem); background: #fff; }
 @media (min-width: 690px) {
   .calendly-inline-widget iframe { clip-path: inset(67px 18px 33px 18px round 2rem); }
 }

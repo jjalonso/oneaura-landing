@@ -245,29 +245,12 @@ const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
 const RESIZE_SPEED = 300 // px per second
 const resizeMs = distance => Math.round(Math.min(2000, Math.max(600, distance / RESIZE_SPEED * 1000)))
 
-// When Calendly's content gets shorter, its card is redrawn at the new height
-// at once, while the box takes a moment to shrink down to it. The clip in
-// index.css is measured from the iframe's bottom, so meanwhile it would sit
-// below the card and show the card's square bottom corners. So the clip
-// starts at the card's new bottom and eases down with the box: same duration,
-// same curve, so it stays on the card's edge the whole way.
 // Runs before widget.js sets the new height, so the box's height is still the
 // old one here — and the duration set here is the one that height change uses.
-// Insets: keep in sync with index.css.
 const followResize = (box, height) => {
-  const iframe = box?.querySelector('iframe')
-  if (!iframe || !box.closest('.is-ready')) return
-  const change = box.getBoundingClientRect().height - height
-  if (!change) return
-  const ms = resizeMs(Math.abs(change))
-  box.style.transitionDuration = `${ms}ms`
-  if (change < 0) return
-  const [top, side, bottom] = matchMedia('(min-width: 690px)').matches ? [67, 18, 33] : [0, 0, 0]
-  iframe.style.transition = 'none'
-  iframe.style.clipPath = `inset(${top}px ${side}px ${change + bottom}px ${side}px round 2rem)`
-  iframe.getBoundingClientRect() // commit the start before easing from it
-  iframe.style.transition = `clip-path ${ms}ms ease-out`
-  iframe.style.clipPath = ''
+  if (!box?.closest('.is-ready')) return
+  const change = Math.abs(box.getBoundingClientRect().height - height)
+  if (change) box.style.transitionDuration = `${resizeMs(change)}ms`
 }
 
 const Reserva = () => {
