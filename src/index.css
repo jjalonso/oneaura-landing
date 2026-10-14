@@ -215,6 +215,8 @@
 .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 602px; }
 @media (min-width: 690px) { .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 700px; } }
 .calendly-wrap:not(.is-ready) .calendly-inline-widget iframe { opacity: 0; }
+/* The calendar skeleton (App.jsx) stands in for Calendly's spinner. */
+.calendly-wrap .calendly-spinner { display: none; }
 /* Once ready, Calendly resizes this div as you move through the booking flow
    (mobile: picking a day, 602 -> 767px; desktop: the details form after
    "Siguiente", 700 -> 1026px) — ease those changes. Never

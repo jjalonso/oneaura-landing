@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Accordion, Button, Card, Chip } from '@heroui/react'
+import { Accordion, Button, Card, Chip, Skeleton } from '@heroui/react'
 import Calculator from './Calculator'
 import { BOOKING_URL, SCHOOLS_URL, TERMS_URL, WHATSAPP_URL, CONTACT_EMAIL, COMMISSION, PAYMENT_FEE, LOGOS, faq } from './content'
 const fmt = n => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -274,9 +274,22 @@ const Reserva = () => {
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className={`calendly-wrap mx-auto max-w-2xl text-foreground ${ready ? 'is-ready' : ''}`}>
+      <div className={`calendly-wrap relative mx-auto max-w-2xl text-foreground ${ready ? 'is-ready' : ''}`}>
         {BOOKING_URL
           ? <>
+              {/* In place of Calendly's spinner while it loads: a calendar
+                  outline — the month bar, then rows of day cells — in the
+                  reserved box, under the still-transparent embed. Unmounted
+                  the moment the calendar is ready, in the same render that
+                  shows the (opaque) iframe over it, so there's no gap. */}
+              {!ready && (
+                <div aria-hidden="true" className="absolute inset-0 px-6 pt-14">
+                  <Skeleton animationType="pulse" className="mx-auto h-4 w-32 rounded-full bg-white/15" />
+                  <div className="mx-auto mt-10 grid max-w-sm grid-cols-7 gap-3">
+                    {Array.from({ length: 28 }).map((_, i) => <Skeleton key={i} animationType="pulse" className="aspect-square rounded-full bg-white/15" />)}
+                  </div>
+                </div>
+              )}
               <div ref={ref} className="calendly-inline-widget relative" data-url={url} data-resize="true" style={{ minWidth: 320 }} />
             </>
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
