@@ -238,6 +238,27 @@ const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
 // this div on every step (that growing is theirs, not ours). The script is
 // injected after mount on purpose: loaded from index.html it would run its
 // one-shot scan before React had rendered the div, and find nothing.
+// When Calendly's content gets shorter, its card is redrawn at the new height
+// at once, while the box takes 1.6s to shrink down to it. The clip in
+// index.css is measured from the iframe's bottom, so for those seconds it
+// would sit below the card and show the card's square bottom corners. So the
+// clip starts at the card's new bottom and eases down with the box: same
+// duration, same curve, so it stays on the card's edge the whole way.
+// Runs before widget.js sets the new height, so the box's height is still the
+// old one here. Insets: keep in sync with index.css.
+const followShrink = (box, height) => {
+  const iframe = box?.querySelector('iframe')
+  if (!iframe || !box.closest('.is-ready')) return
+  const shrinkBy = box.getBoundingClientRect().height - height
+  if (shrinkBy <= 0) return
+  const [top, side, bottom] = matchMedia('(min-width: 690px)').matches ? [67, 18, 33] : [0, 0, 0]
+  iframe.style.transition = 'none'
+  iframe.style.clipPath = `inset(${top}px ${side}px ${shrinkBy + bottom}px ${side}px round 2rem)`
+  iframe.getBoundingClientRect() // commit the start before easing from it
+  iframe.style.transition = 'clip-path 1600ms ease-out'
+  iframe.style.clipPath = ''
+}
+
 const Reserva = () => {
   const ref = useRef(null)
   const [ready, setReady] = useState(false)
@@ -254,7 +275,9 @@ const Reserva = () => {
     let settle
     const onMessage = e => {
       if (e.origin !== 'https://calendly.com' || e.data?.event !== 'calendly.page_height') return
-      if (parseInt(e.data.payload?.height, 10) < 200) return
+      const height = parseInt(e.data.payload?.height, 10)
+      if (height < 200) return
+      followShrink(ref.current, height)
       clearTimeout(settle)
       settle = setTimeout(() => setReady(true), 200)
     }

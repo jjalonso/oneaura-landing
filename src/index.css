@@ -220,7 +220,9 @@
    every step: calendar, day, time, form), with its own 8px corners, 1px border
    and shadow, all out of our CSS's reach. Clip the iframe to that card, 1px in
    so its border and shadow go, with our surfaces' radius (rounded-4xl). In the
-   narrow layout the card fills the iframe and the wrapper's rounding does it. */
+   narrow layout the card fills the iframe, so the clip is just the rounding —
+   there so App.jsx's followShrink can move its bottom edge on both layouts. */
+.calendly-inline-widget iframe { clip-path: inset(0 0 0 0 round 2rem); }
 @media (min-width: 690px) {
   .calendly-inline-widget iframe { clip-path: inset(67px 18px 33px 18px round 2rem); }
 }
