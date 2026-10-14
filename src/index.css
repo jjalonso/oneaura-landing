@@ -216,10 +216,11 @@
 @media (min-width: 690px) { .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 700px; } }
 .calendly-wrap:not(.is-ready) .calendly-inline-widget iframe { opacity: 0; }
 /* Once ready, Calendly resizes this div as you move through the booking flow
-   (picking a day reveals the time slots, etc.) — ease those changes. Never
+   (mobile: picking a day, 602 -> 767px; desktop: the details form after
+   "Siguiente", 700 -> 1026px) — ease those changes. Never
    while loading: there its 26px/2px boot heights would animate as the box
    collapsing and reopening, which is what this used to look like. */
-.calendly-wrap.is-ready .calendly-inline-widget { transition: height 1000ms ease-out; }
+.calendly-wrap.is-ready .calendly-inline-widget { transition: height 1600ms ease-out; }
 
 @utility glass-card {
   background: var(--glass-bg);
