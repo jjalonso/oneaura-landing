@@ -86,7 +86,12 @@ const Logos = () => VISIBLE_LOGOS.length === 0 ? null : (
     <div className="flex flex-col items-center gap-y-8">
       {[VISIBLE_LOGOS.slice(0, 3), VISIBLE_LOGOS.slice(3)].filter(row => row.length).map((row, i) => (
         <div key={i} className="flex flex-wrap items-center justify-center gap-x-16 gap-y-8">
-          {row.map(l => <img key={l.name} src={l.src} alt={l.name} className={`${l.cls} w-auto opacity-80 mix-blend-multiply grayscale transition hover:opacity-100 hover:grayscale-0`} />)}
+          {row.map(l => {
+            const img = <img src={l.src} alt={l.name} className={`${l.cls} w-auto opacity-80 mix-blend-multiply grayscale transition group-hover:opacity-100 group-hover:grayscale-0`} />
+            return l.url
+              ? <a key={l.name} href={l.url} target="_blank" rel="noopener" className="group">{img}</a>
+              : <span key={l.name} className="group">{img}</span>
+          })}
         </div>
       ))}
     </div>
