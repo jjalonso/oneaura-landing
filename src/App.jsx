@@ -238,24 +238,35 @@ const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
 // this div on every step (that growing is theirs, not ours). The script is
 // injected after mount on purpose: loaded from index.html it would run its
 // one-shot scan before React had rendered the div, and find nothing.
+// Calendly resizes the box on every step (index.css eases it). Every change
+// moves at the same speed, so the duration comes from the distance: a big
+// jump doesn't race and a small one doesn't crawl. Clamped so a tiny change
+// isn't a flicker and a huge one isn't a wait.
+const RESIZE_SPEED = 300 // px per second
+const resizeMs = distance => Math.round(Math.min(2000, Math.max(600, distance / RESIZE_SPEED * 1000)))
+
 // When Calendly's content gets shorter, its card is redrawn at the new height
-// at once, while the box takes 1.6s to shrink down to it. The clip in
-// index.css is measured from the iframe's bottom, so for those seconds it
-// would sit below the card and show the card's square bottom corners. So the
-// clip starts at the card's new bottom and eases down with the box: same
-// duration, same curve, so it stays on the card's edge the whole way.
+// at once, while the box takes a moment to shrink down to it. The clip in
+// index.css is measured from the iframe's bottom, so meanwhile it would sit
+// below the card and show the card's square bottom corners. So the clip
+// starts at the card's new bottom and eases down with the box: same duration,
+// same curve, so it stays on the card's edge the whole way.
 // Runs before widget.js sets the new height, so the box's height is still the
-// old one here. Insets: keep in sync with index.css.
-const followShrink = (box, height) => {
+// old one here — and the duration set here is the one that height change uses.
+// Insets: keep in sync with index.css.
+const followResize = (box, height) => {
   const iframe = box?.querySelector('iframe')
   if (!iframe || !box.closest('.is-ready')) return
-  const shrinkBy = box.getBoundingClientRect().height - height
-  if (shrinkBy <= 0) return
+  const change = box.getBoundingClientRect().height - height
+  if (!change) return
+  const ms = resizeMs(Math.abs(change))
+  box.style.transitionDuration = `${ms}ms`
+  if (change < 0) return
   const [top, side, bottom] = matchMedia('(min-width: 690px)').matches ? [67, 18, 33] : [0, 0, 0]
   iframe.style.transition = 'none'
-  iframe.style.clipPath = `inset(${top}px ${side}px ${shrinkBy + bottom}px ${side}px round 2rem)`
+  iframe.style.clipPath = `inset(${top}px ${side}px ${change + bottom}px ${side}px round 2rem)`
   iframe.getBoundingClientRect() // commit the start before easing from it
-  iframe.style.transition = 'clip-path 1600ms ease-out'
+  iframe.style.transition = `clip-path ${ms}ms ease-out`
   iframe.style.clipPath = ''
 }
 
@@ -277,7 +288,7 @@ const Reserva = () => {
       if (e.origin !== 'https://calendly.com' || e.data?.event !== 'calendly.page_height') return
       const height = parseInt(e.data.payload?.height, 10)
       if (height < 200) return
-      followShrink(ref.current, height)
+      followResize(ref.current, height)
       clearTimeout(settle)
       settle = setTimeout(() => setReady(true), 200)
     }

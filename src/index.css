@@ -230,7 +230,9 @@
 .calendly-wrap .calendly-spinner { display: none; }
 /* Once ready, Calendly resizes this div as you move through the booking flow
    (mobile: picking a day, 602 -> 767px; desktop: the details form after
-   "Siguiente", 700 -> 1026px) — ease those changes. Never
+   "Siguiente", 700 -> 1026px) — ease those changes. The duration here is only
+   a fallback: App.jsx's followResize sets one per change, from its distance,
+   so every resize moves at the same speed. Never
    while loading: there its 26px/2px boot heights would animate as the box
    collapsing and reopening, which is what this used to look like. */
 .calendly-wrap.is-ready .calendly-inline-widget { transition: height 1600ms ease-out; }
