@@ -5,9 +5,17 @@
   "observability": {
     "enabled": true
   },
+  // src/worker.js redirects oneaura.app and http:// to https://www.oneaura.app,
+  // so it runs before the static files.
+  "main": "src/worker.js",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "single-page-application"
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    // The landing is one page with no client-side routes: an unknown address
+    // is a real 404, not a copy of the home page (Google counts those copies
+    // as duplicates).
+    "not_found_handling": "404-page"
   },
   // www and the bare apex only — never a wildcard on oneaura.app, which also carries
   // admin.oneaura.app and the per-academy *.oneaura.app subdomains
