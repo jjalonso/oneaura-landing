@@ -63,6 +63,70 @@ const Nav = () => (
   </header>
 )
 
+// The intro video: you explaining the problem, what it can earn a school and
+// how the app works. Centred under the hero, as a pill cropped to your face,
+// and it plays right there inside the pill — no pop-up, no controls, no
+// progress bar. Click to play (with sound: a click is what lets the browser
+// play sound at all), click again to pause; when it ends it goes back to the
+// cover. Nothing of the video is downloaded until the first play.
+// The file is a 640x360 encode (22 MB) of the 1080p original: the pill shows
+// at most ~550px wide, and a Worker serves files up to 25 MB. src/worker.js
+// answers its byte-range requests, without which Safari won't play it.
+const INTRO_VIDEO = { src: '/video/intro.mp4', poster: '/video/intro-poster.jpg' }
+const PlayIcon = ({ className }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>
+)
+const PauseIcon = ({ className }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
+)
+
+const VideoPill = () => {
+  const ref = useRef(null)
+  const [playing, setPlaying] = useState(false)
+  // Until the first play (and again once it ends) the pill shows its title;
+  // after that, only a play/pause button.
+  const [started, setStarted] = useState(false)
+  const toggle = () => {
+    const v = ref.current
+    if (v.paused) v.play().catch(() => {})
+    else v.pause()
+  }
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label={playing ? 'Pausar el vídeo' : 'Ver el vídeo de presentación: te lo cuento en un vídeo'}
+      className="group relative mx-auto block h-40 w-full max-w-[22rem] overflow-hidden rounded-full ring-4 ring-primary md:h-56 md:max-w-[34rem]"
+    >
+      <video
+        ref={ref}
+        src={INTRO_VIDEO.src}
+        poster={INTRO_VIDEO.poster}
+        preload="none"
+        playsInline
+        onPlay={() => { setPlaying(true); setStarted(true) }}
+        onPause={() => setPlaying(false)}
+        onEnded={() => { setPlaying(false); setStarted(false); ref.current.load() }}
+        className="h-full w-full object-cover object-[50%_12%]"
+      />
+      {!started ? (
+        // The title, bottom centre over the shirt: never over the face.
+        <span className="absolute inset-x-0 bottom-2 mx-auto flex w-max items-center gap-2 rounded-full bg-black/45 py-1 pl-1 pr-3.5 text-white backdrop-blur-md transition group-hover:bg-black/55 md:bottom-3 md:gap-3 md:pr-5">
+          <span className="grid h-7 w-7 place-items-center rounded-full bg-primary text-primary-foreground transition group-hover:scale-110 md:h-9 md:w-9">
+            <PlayIcon className="ml-0.5 h-4 w-4 md:h-5 md:w-5" />
+          </span>
+          <span className="text-sm font-semibold md:text-lg">Te lo cuento en un vídeo</span>
+        </span>
+      ) : (
+        // Once started: play while paused, pause only on hover while playing.
+        <span className={`absolute inset-y-0 left-3 my-auto grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-white/40 transition md:left-5 md:h-14 md:w-14 ${playing ? 'opacity-0 group-hover:opacity-100' : ''}`}>
+          {playing ? <PauseIcon className="h-5 w-5" /> : <PlayIcon className="ml-0.5 h-5 w-5 md:h-6 md:w-6" />}
+        </span>
+      )}
+    </button>
+  )
+}
+
 const Hero = () => (
   <S wide className="bg-gradient-to-b from-soft to-background !pt-14 md:!pt-20">
     <div className="grid items-center gap-10 md:grid-cols-2">
@@ -78,6 +142,7 @@ const Hero = () => (
       </div>
       <img src={heroImg} alt="Web app de la escuela con la pantalla de inicio y una videollamada de práctica" className="mx-auto w-full max-w-[22rem] md:max-w-[34rem]" />
     </div>
+    <div className="mt-12 md:mt-16"><VideoPill /></div>
   </S>
 )
 
