@@ -73,12 +73,11 @@ const Nav = () => (
 // at most ~550px wide, and a Worker serves files up to 25 MB. src/worker.js
 // answers its byte-range requests, without which Safari won't play it.
 const INTRO_VIDEO = { src: '/video/intro.mp4', poster: '/video/intro-poster.jpg' }
-const PlayIcon = ({ className }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>
-)
-const PauseIcon = ({ className }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
-)
+// Material Symbols Rounded (index.html). Size through style: the font's own
+// stylesheet is unlayered, so it would win over a Tailwind text-* class.
+const Icon = ({ name, size }) => <span className="material-symbols-rounded" style={{ fontSize: size }} aria-hidden="true">{name}</span>
+const PlayIcon = ({ size }) => <Icon name="play_arrow" size={size} />
+const PauseIcon = ({ size }) => <Icon name="pause" size={size} />
 
 const VideoPill = () => {
   const ref = useRef(null)
@@ -96,7 +95,7 @@ const VideoPill = () => {
       type="button"
       onClick={toggle}
       aria-label={playing ? 'Pausar el vídeo' : 'Ver el vídeo de presentación: te lo cuento en un vídeo'}
-      className="group relative mx-auto block h-40 w-full max-w-[22rem] overflow-hidden rounded-full ring-4 ring-primary md:h-56 md:max-w-[34rem]"
+      className="group relative mx-auto block h-40 w-full cursor-pointer max-w-[22rem] overflow-hidden rounded-full ring-4 ring-primary md:h-56 md:max-w-[34rem]"
     >
       <video
         ref={ref}
@@ -104,6 +103,9 @@ const VideoPill = () => {
         poster={INTRO_VIDEO.poster}
         preload="none"
         playsInline
+        // No Cast / AirPlay button over the pill: it plays here, nowhere else.
+        disableRemotePlayback
+        x-webkit-airplay="deny"
         onPlay={() => { setPlaying(true); setStarted(true) }}
         onPause={() => setPlaying(false)}
         onEnded={() => { setPlaying(false); setStarted(false); ref.current.load() }}
@@ -113,14 +115,14 @@ const VideoPill = () => {
         // The title, bottom centre over the shirt: never over the face.
         <span className="absolute inset-x-0 bottom-2 mx-auto flex w-max items-center gap-2 rounded-full bg-black/45 py-1 pl-1 pr-3.5 text-white backdrop-blur-md transition group-hover:bg-black/55 md:bottom-3 md:gap-3 md:pr-5">
           <span className="grid h-7 w-7 place-items-center rounded-full bg-primary text-primary-foreground transition group-hover:scale-110 md:h-9 md:w-9">
-            <PlayIcon className="ml-0.5 h-4 w-4 md:h-5 md:w-5" />
+            <PlayIcon size="1.25rem" />
           </span>
           <span className="text-sm font-semibold md:text-lg">Te lo cuento en un vídeo</span>
         </span>
       ) : (
         // Once started: play while paused, pause only on hover while playing.
         <span className={`absolute inset-y-0 left-3 my-auto grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-white/40 transition md:left-5 md:h-14 md:w-14 ${playing ? 'opacity-0 group-hover:opacity-100' : ''}`}>
-          {playing ? <PauseIcon className="h-5 w-5" /> : <PlayIcon className="ml-0.5 h-5 w-5 md:h-6 md:w-6" />}
+          {playing ? <PauseIcon size="1.75rem" /> : <PlayIcon size="2rem" />}
         </span>
       )}
     </button>
@@ -267,12 +269,9 @@ const Modelo = () => {
   return (
     <S className="bg-soft"><div className="mx-auto max-w-xl text-center">
       <H2 className="text-primary">Solo ganamos si tú ganas</H2>
-      <p className="mb-6">Sin cuota mensual ni coste de alta. De lo que paga cada alumno, una parte fija es para <b>OneAura</b> y gastos, y todo lo demás es para <b>tu escuela</b>.</p>
+      <p className="mb-6">De lo que paga cada alumno, una parte fija es para <b>OneAura</b> y gastos, y lo demás para <b>tu escuela</b>.</p>
       <Tile className="text-left">
-        <div className="flex items-baseline justify-between gap-4">
-          <span className="text-sm">Lo que paga cada alumno al mes</span>
-          <span className="text-2xl font-bold tabular-nums text-primary">{price} €</span>
-        </div>
+        <p className="text-center text-sm">Si la suscripción vale <span className="ml-1 text-2xl font-bold tabular-nums text-primary">{price} €</span></p>
         <div className="mt-5 flex h-3 overflow-hidden rounded-full bg-neutral-surface" aria-hidden="true">
           <div className="bg-secondary" style={{ width: `${(fee / max) * 100}%` }} />
           <div className="bg-primary transition-[width] duration-700 ease-out" style={{ width: `${(school / max) * 100}%` }} />
@@ -286,15 +285,6 @@ const Modelo = () => {
     </div></S>
   )
 }
-
-const Fundador = () => (
-  <S><div className="mx-auto max-w-2xl">
-    <H2 className="text-primary">Por qué creamos OneAura</H2>
-    <p className="mb-3">Como estudiantes de mediumnidad en distintos cursos, notamos siempre lo mismo: practicar era lo más difícil. Cuadrar horarios entre zonas horarias, exponernos en redes sociales sin tener seguidores y otras muchas dificultades hacían que encontrar con quién practicar fuera un esfuerzo constante.</p>
-    <p>Creamos OneAura para que eso no vuelva a pasar, y para que las escuelas que forman a esos alumnos puedan seguir acompañándolos.</p>
-    <p className="mt-5 text-base font-semibold text-primary">Juan &amp; Per</p>
-  </div></S>
-)
 
 const Faq = () => (
   <S id="faq"><div className="mx-auto max-w-2xl">
@@ -311,16 +301,13 @@ const Faq = () => (
 )
 
 const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js'
-// Calendly's own inline embed, nothing else: a div with their class, their
-// data-url and data-resize, and their script. widget.js finds the div itself
-// and takes over — it creates the iframe, sizes it, and writes the height onto
-// this div on every step (that growing is theirs, not ours). The script is
-// injected after mount on purpose: loaded from index.html it would run its
-// one-shot scan before React had rendered the div, and find nothing.
-// Calendly resizes the box on every step (index.css eases it). Every change
-// moves at the same speed, so the duration comes from the distance: a big
-// jump doesn't race and a small one doesn't crawl. Clamped so a tiny change
-// isn't a flicker and a huge one isn't a wait.
+const CALENDLY_URL = BOOKING_URL && `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=ffffff&text_color=645d5e`
+// Calendly's inline embed, set up the way their developer docs describe
+// (calendly.com/help/advanced-calendly-embed-for-developers):
+// Calendly.initInlineWidget({ url, parentElement, resize: true }) once
+// widget.js has loaded. widget.js creates the iframe in our div and, with
+// resize, writes the height onto it on every step (that growing is theirs).
+// The script is injected after mount, so the div exists when it's called.
 const RESIZE_SPEED = 600 // px per second
 const resizeMs = distance => Math.round(Math.min(2000, Math.max(400, distance / RESIZE_SPEED * 1000)))
 
@@ -335,6 +322,19 @@ const followResize = (box, height) => {
 const Reserva = () => {
   const ref = useRef(null)
   const [ready, setReady] = useState(false)
+  // Until its section comes into view, the widget boots invisibly inside the
+  // viewport (index.css) — Chrome doesn't run an off-screen cross-origin
+  // iframe, and once it has gone off-screen it takes 1-3s to repaint it,
+  // blank, when it comes back. So it moves into its section only when the
+  // section is already on screen: it never leaves the viewport.
+  const [placed, setPlaced] = useState(false)
+  useEffect(() => {
+    const wrap = ref.current?.parentElement
+    if (!wrap) return
+    const io = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setPlaced(true); io.disconnect() } })
+    io.observe(wrap)
+    return () => io.disconnect()
+  }, [])
   useEffect(() => {
     if (!BOOKING_URL) return
     // Calendly posts its page height from the iframe. The first ones while it
@@ -356,21 +356,31 @@ const Reserva = () => {
     }
     window.addEventListener('message', onMessage)
     const failsafe = setTimeout(() => setReady(true), 10000)
-    if (!document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)) {
-      const script = document.createElement('script')
-      script.src = CALENDLY_SCRIPT
-      script.async = true
-      document.body.appendChild(script)
+    const init = () => {
+      // Once per div: React runs effects twice in development.
+      if (!ref.current || ref.current.dataset.calendly) return
+      ref.current.dataset.calendly = 'on'
+      window.Calendly.initInlineWidget({ url: CALENDLY_URL, parentElement: ref.current, resize: true })
     }
-    return () => { window.removeEventListener('message', onMessage); clearTimeout(failsafe); clearTimeout(settle) }
+    let script = document.querySelector(`script[src="${CALENDLY_SCRIPT}"]`)
+    if (window.Calendly) init()
+    else {
+      if (!script) {
+        script = document.createElement('script')
+        script.src = CALENDLY_SCRIPT
+        script.async = true
+        document.body.appendChild(script)
+      }
+      script.addEventListener('load', init)
+    }
+    return () => { window.removeEventListener('message', onMessage); clearTimeout(failsafe); clearTimeout(settle); script?.removeEventListener('load', init) }
   }, [])
-  const url = `${BOOKING_URL}${BOOKING_URL.includes('?') ? '&' : '?'}hide_event_type_details=1&hide_gdpr_banner=1&primary_color=825355&background_color=ffffff&text_color=645d5e`
   return (
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
       <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
-      <div className={`calendly-wrap relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground ${ready ? 'is-ready' : ''}`}>
+      <div className={`calendly-wrap relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground ${ready ? 'is-ready' : ''} ${placed ? 'is-placed' : ''}`}>
         {BOOKING_URL
           ? <>
               {/* In place of Calendly's spinner while it loads: a calendar
@@ -388,7 +398,7 @@ const Reserva = () => {
                   </div>
                 </div>
               )}
-              <div ref={ref} className="calendly-inline-widget relative" data-url={url} data-resize="true" style={{ minWidth: 320 }} />
+              <div ref={ref} className="calendly-embed relative" style={{ minWidth: 320 }} />
             </>
           : <div className="p-10 text-xs text-muted">[Aquí va el calendario de Calendly / Cal.com: define <code>BOOKING_URL</code> en <code>src/content.js</code>]</div>}
       </div>
@@ -407,5 +417,5 @@ const Footer = () => (
 )
 
 export default function App() {
-  return <><Nav /><Hero /><Logos /><Problema /><Como /><Solucion /><S id="calculadora"><H2 className="text-primary">¿Cuánto puede ganar tu escuela?</H2><Calculator /></S><Modelo /><Fundador /><Faq /><Reserva /><Footer /><WhatsAppFloat /></>
+  return <><Nav /><Hero /><Logos /><Problema /><Como /><Solucion /><S id="calculadora"><H2 className="text-primary">¿Cuánto puede ganar tu escuela?</H2><Calculator /></S><Modelo /><Faq /><Reserva /><Footer /><WhatsAppFloat /></>
 }

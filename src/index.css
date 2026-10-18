@@ -198,8 +198,8 @@
 
 /* Calendly inline embed. The box sits at the calendar's own height the whole
    time, so nothing jumps and nothing is left over once it's painted:
-   - while loading: Calendly's spinner, centred by widget.css, on the section's
-     own colour. The iframe stays at opacity 0 — while booting it reports 26px
+   - while loading: a calendar skeleton (App.jsx) on the section's own
+     colour. The iframe stays at opacity 0 — while booting it reports 26px
      then 2px and draws its own loader pinned to the top. (Not visibility:
      hidden: Chrome stops painting hidden cross-origin frames and Calendly
      never finishes booting.)
@@ -209,12 +209,41 @@
    layout, 700px from a 690px viewport (its iframe then ~650px wide).
    isolation: widget.css gives the spinner z-index:-1; without its own stacking
    context it sinks behind the section's background and never shows.
-   Ready-state lives on the wrapper, not this div, because widget.js appends its
-   own classes to this div's className and a React re-render would wipe them. */
-.calendly-inline-widget { isolation: isolate; }
-.calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 602px; }
-@media (min-width: 690px) { .calendly-wrap:not(.is-ready) .calendly-inline-widget { min-height: 700px; } }
-.calendly-wrap:not(.is-ready) .calendly-inline-widget iframe { opacity: 0; }
+   Ready-state lives on the wrapper, not this div, because widget.js writes onto
+   this div itself and a React re-render could wipe it. */
+.calendly-embed { isolation: isolate; }
+/* The wrapper holds the calendar's height until the widget is both ready and
+   in it (see below). */
+.calendly-wrap:not(.is-ready), .calendly-wrap:not(.is-placed) { min-height: 602px; }
+@media (min-width: 690px) { .calendly-wrap:not(.is-ready), .calendly-wrap:not(.is-placed) { min-height: 700px; } }
+.calendly-wrap:not(.is-ready) .calendly-embed iframe,
+.calendly-wrap:not(.is-placed) .calendly-embed iframe { opacity: 0; }
+/* Until its section comes into view (.is-placed, App.jsx), the widget waits
+   inside the viewport rather than down in the section: Chrome doesn't run a
+   cross-origin iframe that is off-screen (measured: Calendly sent nothing for
+   8s until the section was scrolled to), and one that went off-screen takes
+   1-3s to repaint, blank, when it comes back. Fixed at the top, behind
+   everything, not clickable, invisible (the iframe stays at opacity 0 until
+   it is both ready and placed: some sections have no background of their
+   own, and a painted calendar would show through them), at the width of its place in the
+   section so Calendly picks the same layout. Moved with CSS only: moving an
+   iframe in the DOM reloads it.
+   !important: widget.js writes position and height inline on this div — and
+   at its boot heights (26px, then 2px) Calendly never finishes rendering, so
+   it keeps its full height here. */
+.calendly-wrap:not(.is-placed) .calendly-embed {
+  position: fixed !important; top: 0; left: 0; right: 0; margin: 0 auto;
+  width: min(42rem, calc(100vw - 2.5rem));
+  z-index: -1; pointer-events: none;
+}
+/* Full height until ready, wherever it is (waiting at the top, or already in
+   its section when the visitor got there first). */
+.calendly-wrap:not(.is-ready) .calendly-embed,
+.calendly-wrap:not(.is-placed) .calendly-embed { height: 602px !important; }
+@media (min-width: 690px) {
+  .calendly-wrap:not(.is-ready) .calendly-embed,
+  .calendly-wrap:not(.is-placed) .calendly-embed { height: 700px !important; }
+}
 /* Wide layout only (from 690px): Calendly draws its own card inside the
    iframe — inset 66px top, 17px sides, 32px bottom (measured, and the same on
    every step: calendar, day, time, form), with its own 8px corners, 1px border
@@ -228,9 +257,9 @@
    reads as the same card, so it shrinks smoothly with the box and keeps our
    rounded bottom — instead of the card snapping to its new size with its own
    square corners. Same white as the embed's background_color. */
-.calendly-inline-widget iframe { clip-path: inset(0 0 0 0 round 2rem); background: #fff; }
+.calendly-embed iframe { clip-path: inset(0 0 0 0 round 2rem); background: #fff; }
 @media (min-width: 690px) {
-  .calendly-inline-widget iframe { clip-path: inset(67px 18px 33px 18px round 2rem); }
+  .calendly-embed iframe { clip-path: inset(67px 18px 33px 18px round 2rem); }
 }
 /* The calendar skeleton (App.jsx) stands in for Calendly's spinner. */
 .calendly-wrap .calendly-spinner { display: none; }
@@ -241,7 +270,7 @@
    so every resize moves at the same speed. Never
    while loading: there its 26px/2px boot heights would animate as the box
    collapsing and reopening, which is what this used to look like. */
-.calendly-wrap.is-ready .calendly-inline-widget { transition: height 1600ms ease-out; }
+.calendly-wrap.is-ready .calendly-embed { transition: height 1600ms ease-out; }
 
 @utility glass-card {
   background: var(--glass-bg);
