@@ -378,7 +378,7 @@ const Reserva = () => {
   return (
     <S id="reserva" className="bg-primary text-center text-primary-foreground">
       <H2>Tus alumnos ya quieren seguir practicando. Dales dónde hacerlo.</H2>
-      <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la web app y calculamos juntos lo que puede generar tu escuela.</p>
+      <p className="mb-3 opacity-90">Reserva 30 minutos. Te enseñamos la app y todos los detalles.</p>
       <p className="mb-6 text-sm opacity-90">¿Prefieres escribirnos? <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline underline-offset-4">{CONTACT_EMAIL}</a></p>
       <div className={`calendly-wrap relative mx-auto max-w-2xl overflow-hidden rounded-4xl text-foreground ${ready ? 'is-ready' : ''} ${placed ? 'is-placed' : ''}`}>
         {BOOKING_URL
