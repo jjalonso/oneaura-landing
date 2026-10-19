@@ -9,12 +9,14 @@ import biel from './assets/logos/biel.webp'
 import rita from './assets/logos/rita.webp'
 import comunicaciones from './assets/logos/comunicaciones.webp'
 import iker from './assets/logos/iker.webp'
+import sandra from './assets/logos/sandra.webp'
 // Escuelas que ya forman parte de OneAura, en orden de importancia; cls controla el tamaño: todos con la misma altura.
 // hidden: true lo deja fuera de la web sin borrarlo — quita la marca para volver a mostrarlo.
 export const LOGOS = [
   { name: 'Inés Justicia', url: 'https://inesjusticia.com/', src: ines, cls: 'h-[32px]' },
   { name: 'Biel Giner', url: 'https://institutoagartha.es/', src: biel, cls: 'h-[17px]' },
   { name: 'Iker Tzaile', url: 'https://www.ikertzailemedium.com/', src: iker, cls: 'h-[28px]' },
+  { name: 'Sandra Sogas', url: 'https://www.kinesiologiakashica.com/', src: sandra, cls: 'h-[42px]' },
   { name: 'Comunicaciones de Luz · María Fernanda', src: comunicaciones, cls: 'h-[28px]', hidden: true },
   { name: 'Rita Klair', src: rita, cls: 'h-[28px]', hidden: true },
 ]
