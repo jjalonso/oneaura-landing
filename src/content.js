@@ -17,8 +17,8 @@ export const LOGOS = [
   { name: 'Inés Justicia', url: 'https://inesjusticia.com/', src: ines, cls: 'h-[32px]' },
   { name: 'Biel Giner', url: 'https://institutoagartha.es/', src: biel, cls: 'h-[17px]' },
   { name: 'Iker Tzaile', url: 'https://www.ikertzailemedium.com/', src: iker, cls: 'h-[28px]' },
-  { name: 'Sandra Sogas', url: 'https://www.kinesiologiakashica.com/', src: sandra, cls: 'h-[42px]' },
   { name: 'Noelia Santamaría', url: 'https://noeliasantamaria.com/', src: noelia, cls: 'h-[52px]' },
+  { name: 'Sandra Sogas', url: 'https://www.kinesiologiakashica.com/', src: sandra, cls: 'h-[42px]' },
   { name: 'Comunicaciones de Luz · María Fernanda', src: comunicaciones, cls: 'h-[28px]', hidden: true },
   { name: 'Rita Klair', src: rita, cls: 'h-[28px]', hidden: true },
 ]
